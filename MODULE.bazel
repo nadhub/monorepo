@@ -4,6 +4,18 @@ module(
 )
 
 
+bazel_dep(name = "aspect_rules_js", version = "2.8.3")
+
+js_ext = use_extension("@aspect_rules_js//js:extensions.bzl", "ext")
+js_ext.npm(
+    name = "npm",
+    pnpm_lock = "//:pnpm-lock.yaml",
+)
+use_repo(js_ext, "npm")
+
+js_toolchains_ext = use_extension("@aspect_rules_js//js:toolchains.bzl", "toolchains")
+js_toolchains_ext.register_default_toolchains()
+
 bazel_dep(name = "aspect_rules_ts", version = "3.8.1")
 git_override(
     module_name = "aspect_rules_ts",
