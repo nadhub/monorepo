@@ -1,0 +1,33 @@
+module(
+    name = "monorepo",
+    version = "0.1.0",
+)
+
+
+bazel_dep(name = "aspect_rules_ts", version = "3.8.1")
+git_override(
+    module_name = "aspect_rules_ts",
+    remote = "https://github.com/aspect-build/rules_ts.git",
+    commit = "6e5ab38",
+)
+
+rules_ts_ext = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext", dev_dependency = True)
+rules_ts_ext.deps(
+    ts_integrity = "",
+    ts_version = "5.9.3",
+)
+use_repo(rules_ts_ext, "npm_typescript")
+
+bazel_dep(name = "rules_python", version = "1.7.0")
+
+bazel_dep(name = "rules_helm", version = "0.20.1")
+
+
+bazel_dep(name = "gazelle", version = "0.47.0")
+
+bazel_dep(name = "bazel_skylib", version = "1.9.0")
+git_override(
+    module_name = "bazel_skylib",
+    remote = "https://github.com/bazelbuild/bazel-skylib.git",
+    commit = "53f6d0d",
+)

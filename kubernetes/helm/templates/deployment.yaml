@@ -1,0 +1,18 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: monorepo
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: monorepo
+  template:
+    metadata:
+      labels:
+        app: monorepo
+    spec:
+      containers:
+        - name: python
+          image: python:3.9-slim
+          command: ["python", "-c", "print('Hello from Python!')"]

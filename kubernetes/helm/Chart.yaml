@@ -1,0 +1,4 @@
+apiVersion: v2
+name: monorepo
+description: A Helm chart for the monorepo application
+version: 0.1.0
