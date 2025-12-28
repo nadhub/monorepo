@@ -2,6 +2,7 @@
 # See https://pnpm.io/pnpm-workspace_yaml
 packages:
   - .
+  - hello_ts
 
 catalog:
   "@types/node": "^20.12.7"
