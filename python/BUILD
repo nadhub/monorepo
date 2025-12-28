@@ -1,24 +1,44 @@
-load("@rules_oci//oci:defs.bzl", "oci_image")
-load("@rules_pkg//pkg:tar.bzl", "pkg_tar")
-load("@rules_python//python:defs.bzl", "py_binary")
-load("@my_python_deps//:requirements.bzl", "requirement")
+load("@pip//:requirements.bzl", "all_whl_requirements")
+load("@rules_python_gazelle_plugin//manifest:defs.bzl", "gazelle_python_manifest")
+load("@rules_python_gazelle_plugin//modules_mapping:def.bzl", "modules_mapping")
+load("@rules_uv//uv:pip.bzl", "pip_compile")
 
-py_binary(
-    name = "main",
-    srcs = ["main.py"],
-    deps = [
-        requirement("requests"),
-    ],
+# This rule fetches the metadata for python packages we depend on. That data is
+# required for the gazelle_python_manifest rule to update our manifest file.
+modules_mapping(
+    name = "modules_map",
+    wheels = all_whl_requirements,
 )
 
-pkg_tar(
-    name = "main_tar",
-    srcs = [":main"],
+gazelle_python_manifest(
+    name = "gazelle_python_manifest",
+    manifest = "//python:gazelle_python.yaml",
+    modules_mapping = ":modules_map",
+    pip_repository_name = "pip",
+    requirements = "//python:requirements_lock.txt",
 )
 
-oci_image(
-    name = "main_image",
-    base = "@debian_python_base",
-    tars = [":main_tar"],
-    entrypoint = ["/main"],
+pip_compile(
+    name = "runtime",
+    requirements_in = "//python:requirements.in",
+    requirements_txt = "runtime.txt",
+)
+
+# A single constraint-solution for the full monorepo.
+# Allows dependencies between different applications without risk of version skew.
+# NB: this can easily become overconstrained. It's okay to have applications opt-out.
+# they can use virtual deps in rules_py in complex cases.
+pip_compile(
+    name = "requirements.all",
+    # data = [
+    #     requirements_in,
+    #     # "runtime.txt",
+    #     # "test.in",
+    #     # "//logger/cli:requirements.txt",
+    #     # "//oci_python_image:requirements.txt",
+    #     # "//py_mypy:requirements.txt",
+    #     # "//tools/mypy:requirements.txt",
+    # ],
+    requirements_in = "//python:requirements.in",
+    requirements_txt = "//python:requirements_lock.txt",
 )
