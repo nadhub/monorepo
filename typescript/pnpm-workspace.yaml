@@ -1,0 +1,11 @@
+# Points to npm packages (folders with a package.json) within the monorepo.
+# See https://pnpm.io/pnpm-workspace_yaml
+packages:
+  - .
+
+catalog:
+  "@types/node": "^20.12.7"
+  "typescript": "^5.4.5"
+
+pnpm:
+  onlyBuiltDependencies: []
