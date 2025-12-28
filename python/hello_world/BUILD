@@ -1,4 +1,4 @@
-load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load", "oci_push")
 load("@rules_python//python:defs.bzl", "py_binary")
 load("@tar.bzl", "tar")
 
@@ -28,4 +28,11 @@ oci_load(
     name = "main_image_load",
     image = ":main_image",
     repo_tags = ["main_image:latest"],
+)
+
+oci_push(
+    name = "push_image",
+    image = ":main_image",
+    remote_tags = ["latest"],
+    repository = "index.docker.io/nadir20062010/hello_python",
 )
