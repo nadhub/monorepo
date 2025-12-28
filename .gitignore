@@ -1,0 +1,134 @@
+# General
+# Operating System Files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# IDE and Editor Files
+.idea/
+.vscode/
+*.swp
+*~
+
+# Build Artifacts and Logs
+/build/
+/dist/
+*.log
+*.tmp
+*.bak
+
+# Python
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+.env/
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py.cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# Django stuff
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff
+instance/
+.webassets-cache
+
+# TypeScript
+# Compiled JavaScript and map files
+*.js
+*.js.map
+*.d.ts
+
+# Node.js modules
+node_modules/
+
+# Build output
+/dist/
+/out/
+
+# Go
+# Compiled executables
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test output
+*.test
+*.out
+
+# Build cache
+.cache/
+
+# Bazel
+# Ignore all bazel-* symlinks. There is no full list since this can change
+# based on the name of the directory bazel is cloned into.
+/bazel-*
+
+# Directories for the Bazel IntelliJ plugin containing the generated
+# IntelliJ project files and plugin configuration.
+/.ijwb/
+/.aswb/
+/.clwb/
+
+# Ignore outputs generated during Bazel bootstrapping.
+/output/
+
+# Bazel-specific output directories
+bazel-bin/
+bazel-genfiles/
+bazel-out/
+bazel-testlogs/
+bazel-bazel-out/
