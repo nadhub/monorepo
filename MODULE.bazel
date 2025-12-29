@@ -82,6 +82,8 @@ rules_ts_ext.deps()
 use_repo(rules_ts_ext, "npm_typescript")
 
 ####################################################
+
+# OCI setup
 bazel_dep(name = "tar.bzl", version = "0.7.0")
 bazel_dep(name = "rules_oci", version = "2.2.7")
 
@@ -93,5 +95,12 @@ oci.pull(
 )
 use_repo(oci, "debian_python_base", "debian_python_base_linux_amd64")
 
+####################################################
+
+# Helm setup
 bazel_dep(name = "rules_helm", version = "0.20.1")
+
+####################################################
+
+# Gazelle setup
 bazel_dep(name = "gazelle", version = "0.47.0")
