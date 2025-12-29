@@ -1,1 +1,7 @@
 replicaCount: 1
+
+image:
+  repository: index.docker.io/nadir20062010/hello_python
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: "latest"
