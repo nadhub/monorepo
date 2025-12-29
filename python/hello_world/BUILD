@@ -1,3 +1,4 @@
+load("@rules_helm//helm:defs.bzl", "helm_chart", "helm_install", "helm_uninstall")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load", "oci_push")
 load("@rules_python//python:defs.bzl", "py_binary")
 load("@tar.bzl", "tar")
@@ -35,4 +36,36 @@ oci_push(
     image = ":main_image",
     remote_tags = ["latest"],
     repository = "index.docker.io/nadir20062010/hello_python",
+)
+
+helm_chart(
+    name = "chart",
+    chart = "//kubernetes:helm/Chart.yaml",
+    templates = ["//kubernetes:helm_templates"],
+    values = "//kubernetes:helm/values.yaml",
+)
+
+helm_install(
+    name = "app-1",
+    helm_opts = [
+        "--namespace",
+        "my-ns",
+        "--create-namespace",
+        "--wait",
+    ],
+    install_name = "app-1",
+    package = ":chart",
+)
+
+helm_uninstall(
+    name = "uninstall",
+    helm_opts = [
+        "uninstall",  # Required verb
+        "app-1",  # Argument 1: The release we actually want to uninstall
+        "--namespace",
+        "my-ns",
+        "--wait",
+        "--ignore-not-found",  # Argument: Ignore error when it tries to uninstall "uninstall" (the target name)
+    ],
+    install_name = "app-1",
 )

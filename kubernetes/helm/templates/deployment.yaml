@@ -1,16 +1,16 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: monorepo
+  name: {{ .Release.Name }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      app: monorepo
+      app: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: monorepo
+        app: {{ .Release.Name }}
     spec:
       containers:
         - name: {{ .Chart.Name }}
