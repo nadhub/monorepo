@@ -1,1 +1,15 @@
+load("@gazelle//:def.bzl", "gazelle", "gazelle_binary")
+
 exports_files([".bazelignore"])
+
+gazelle(
+    name = "gazelle",
+    gazelle = ":gazelle_bin",
+)
+
+gazelle_binary(
+    name = "gazelle_bin",
+    languages = [
+        "@rules_python_gazelle_plugin//python",
+    ],
+)

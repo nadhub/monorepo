@@ -1,11 +1,13 @@
+# gazelle:ignore
 load("@rules_helm//helm:defs.bzl", "helm_chart", "helm_install", "helm_uninstall")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load", "oci_push")
-load("@rules_python//python:defs.bzl", "py_binary")
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
 load("@tar.bzl", "tar")
 
 py_binary(
     name = "main",
     srcs = ["main.py"],
+    visibility = ["//:__subpackages__"],
     deps = [
         "@pip//requests",
     ],
@@ -68,4 +70,11 @@ helm_uninstall(
         "--ignore-not-found",  # Argument: Ignore error when it tries to uninstall "uninstall" (the target name)
     ],
     install_name = "app-1",
+)
+
+py_library(
+    name = "hello_world",
+    srcs = ["main.py"],
+    visibility = ["//:__subpackages__"],
+    deps = ["@pip//requests"],
 )

@@ -1,0 +1,16 @@
+# GENERATED FILE - DO NOT EDIT!
+#
+# To update this file, run:
+#   bazel run //python:gazelle_python_manifest.update
+
+---
+manifest:
+  modules_mapping:
+    certifi: certifi
+    charset_normalizer: charset_normalizer
+    idna: idna
+    requests: requests
+    urllib3: urllib3
+  pip_repository:
+    name: pip
+integrity: d447ac129ec648f94b55061bc413552f27cced7e270c97a2294f997011e788d1
