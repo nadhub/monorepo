@@ -1,10 +1,6 @@
 import logging
 import sys
 
-# Adjust python path if needed for local execution without Bazel (simplification)
-import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-
 from python.langfuse_1.config import AppConfig
 from python.langfuse_1.core.gemini_service import GeminiService
 from python.common.observability.tracer_interface import TracerInterface
