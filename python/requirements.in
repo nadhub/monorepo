@@ -4,3 +4,4 @@ idna==3.11
 urllib3==2.6.1
 certifi==2025.11.12
 fastAPI==0.128.0
+langfuse==3.11.2
