@@ -13,6 +13,7 @@ manifest:
     cachetools: cachetools
     certifi: certifi
     charset_normalizer: charset_normalizer
+    click: click
     distro: distro
     dotenv: python_dotenv
     fastapi: fastapi
@@ -148,9 +149,10 @@ manifest:
     typing_extensions: typing_extensions
     typing_inspection: typing_inspection
     urllib3: urllib3
+    uvicorn: uvicorn
     websockets: websockets
     wrapt: wrapt
     zipp: zipp
   pip_repository:
     name: pip
-integrity: 10c41170ce9d36ea9de64cdaddbd2e771b89818f495874abd979efc4640975d6
+integrity: 80e8693cc159e73abb8bf91f2924bdb5aa92d8e9c049ca694599136bcc33bd5f

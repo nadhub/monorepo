@@ -16,6 +16,13 @@ class TracerInterface(ABC):
         pass
 
     @abstractmethod
+    def span(self, **kwargs):
+        """
+        Abstract context manager to create a span.
+        """
+        pass
+
+    @abstractmethod
     def shutdown(self):
         """
         Flushes and shuts down the tracer.

@@ -20,7 +20,7 @@ class GeminiService:
         self.client = genai.Client(api_key=api_key)
         self.tracer = tracer
 
-    def generate_content(self, prompt: str, model_name: str = "gemini-2.0-flash-exp") -> str:
+    def generate_content(self, prompt: str, model_name: str = "gemini-2.5-flash") -> str:
         """
         Generates content using Google GenAI with tracing.
         """

@@ -17,6 +17,13 @@ class NoOpTracer(TracerInterface):
         """
         yield None
 
+    @contextmanager
+    def span(self, **kwargs):
+        """
+        Does nothing.
+        """
+        yield None
+
     def shutdown(self):
         """
         Does nothing.

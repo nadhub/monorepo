@@ -2,8 +2,7 @@ import logging
 import os
 from contextlib import contextmanager
 
-from langfuse import Langfuse
-from langfuse.decorators import observe
+from langfuse import Langfuse, observe
 from openinference.instrumentation.google_genai import GoogleGenAIInstrumentor
 from .tracer_interface import TracerInterface
 
@@ -43,8 +42,8 @@ class LangfuseTracer(TracerInterface):
         # Using it as a context manager is supported in newer versions or 
         # via `langfuse.trace()`.
         
-        # Let's use `langfuse.trace()` for explicit span creation if needed.
-        trace = self.langfuse.trace(name=name, **kwargs)
+        # Let's use `langfuse.start_span()` for explicit span creation if needed.
+        trace = self.langfuse.start_span(name=name, **kwargs)
         logger.debug(f"Started trace: {name} with kwargs: {kwargs}")
         try:
             yield trace
@@ -52,8 +51,22 @@ class LangfuseTracer(TracerInterface):
             trace.update(level="ERROR", status_message=str(e))
             raise
         finally:
-            # Updates are flushed in background usually, but we can be explicit if needed
-            pass
+            trace.end()
+
+    @contextmanager
+    def span(self, name: str, **kwargs):
+        """
+        Creates a span.
+        """
+        span = self.langfuse.start_span(name=name, **kwargs)
+        logger.debug(f"Started span: {name} with kwargs: {kwargs}")
+        try:
+            yield span
+        except Exception as e:
+            span.update(level="ERROR", status_message=str(e))
+            raise
+        finally:
+            span.end()
 
     def shutdown(self):
         logger.info("Flushing Langfuse events...")

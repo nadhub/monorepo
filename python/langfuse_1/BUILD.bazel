@@ -15,13 +15,30 @@ py_library(
     name = "langfuse_1",
     srcs = [
         "config.py",
+        "fastapi_app.py",
         "main.py",
     ],
     visibility = ["//:__subpackages__"],
     deps = [
         "//python/common/observability",
         "//python/langfuse_1/core",
+        "@pip//fastapi",
         "@pip//pydantic",
         "@pip//pydantic_settings",
+        "@pip//uvicorn",
+    ],
+)
+
+py_binary(
+    name = "fastapi_app",
+    srcs = ["fastapi_app.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":langfuse_1",
+        "//python/common/observability",
+        "//python/langfuse_1/core",
+        "@pip//fastapi",
+        "@pip//pydantic",
+        "@pip//uvicorn",
     ],
 )

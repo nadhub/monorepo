@@ -10,6 +10,9 @@ class AppConfig(BaseSettings):
     # Google GenAI Settings
     GOOGLE_API_KEY: str = Field(..., description="API Key for Google GenAI")
     
+    # App Settings
+    ROOT_PATH: str = Field("", description="Root path for the API", validation_alias="ROOT_PATH")
+
     # Observability Settings
     ENABLE_OBSERVABILITY: bool = Field(False, description="Flag to enable/disable observability")
     LANGFUSE_PUBLIC_KEY: Optional[str] = Field(None, description="Langfuse Public Key")
