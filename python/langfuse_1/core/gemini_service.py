@@ -50,3 +50,21 @@ class GeminiService:
             except Exception as e:
                 # The tracer exit logic should handle the exception status update
                 raise e
+
+    def generate_joke(self, topic: str) -> str:
+        """
+        Generates a joke about the given topic using a managed prompt.
+        """
+        try:
+            # Retrieve managed prompt
+            prompt_obj = self.tracer.get_prompt("joke/joke-generator")
+            # Compile prompt with the variable 'topic'
+            compiled_prompt = prompt_obj.compile(topic=topic)
+            
+            # Use the compiled prompt for generation
+            return self.generate_content(compiled_prompt)
+        except Exception as e:
+            # Fallback if prompt fetching or compilation fails (e.g. prompt not found)
+            print(f"Error fetching managed prompt: {e}")
+            fallback_prompt = f"Tell me a joke about {topic}"
+            return self.generate_content(fallback_prompt)

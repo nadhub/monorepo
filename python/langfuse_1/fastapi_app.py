@@ -10,6 +10,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 
 from python.langfuse_1.config import AppConfig
 from python.langfuse_1.core.gemini_service import GeminiService
+from python.common.m_fastAPI.fastapi_base import create_base_app
 
 app_config = AppConfig()
 
@@ -24,7 +25,8 @@ else:
 # Initialize Service
 gemini_service = GeminiService(api_key=app_config.GOOGLE_API_KEY, tracer=tracer)
 
-app = FastAPI(root_path=app_config.ROOT_PATH)
+# Create Base App
+app = create_base_app(root_path=app_config.ROOT_PATH)
 
 class RecipeRequest(BaseModel):
     prompt: str
@@ -51,6 +53,22 @@ def generate_recipe(request: RecipeRequest):
             if span and hasattr(span, "update"):
                 span.update(output=result)
             return {"recipe": result}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+class JokeRequest(BaseModel):
+    topic: str
+
+@app.post("/gen-joke")
+def generate_joke(request: JokeRequest):
+    try:
+        # Trace the request
+        with tracer.trace(name="POST /gen-joke", input=request.model_dump()) as span:
+            # This calls the service which fetches the managed prompt
+            result = gemini_service.generate_joke(request.topic)
+            if span and hasattr(span, "update"):
+                span.update(output=result)
+            return {"joke": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

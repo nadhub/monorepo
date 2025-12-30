@@ -20,6 +20,7 @@ py_library(
     ],
     visibility = ["//:__subpackages__"],
     deps = [
+        "//python/common/m_fastAPI",
         "//python/common/observability",
         "//python/langfuse_1/core",
         "@pip//fastapi",
@@ -35,6 +36,7 @@ py_binary(
     visibility = ["//:__subpackages__"],
     deps = [
         ":langfuse_1",
+        "//python/common/m_fastAPI",
         "//python/common/observability",
         "//python/langfuse_1/core",
         "@pip//fastapi",

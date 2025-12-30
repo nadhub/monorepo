@@ -1,0 +1,8 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "m_fastAPI",
+    srcs = ["fastapi_base.py"],
+    visibility = ["//:__subpackages__"],
+    deps = ["@pip//fastapi"],
+)

@@ -68,6 +68,12 @@ class LangfuseTracer(TracerInterface):
         finally:
             span.end()
 
+    def get_prompt(self, name: str):
+        """
+        Retrieves a managed prompt from Langfuse.
+        """
+        return self.langfuse.get_prompt(name)
+
     def shutdown(self):
         logger.info("Flushing Langfuse events...")
         self.langfuse.flush()

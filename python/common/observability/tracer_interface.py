@@ -23,6 +23,13 @@ class TracerInterface(ABC):
         pass
 
     @abstractmethod
+    def get_prompt(self, name: str):
+        """
+        Abstract method to retrieve a prompt by its name.
+        """
+        pass
+
+    @abstractmethod
     def shutdown(self):
         """
         Flushes and shuts down the tracer.
