@@ -1,7 +1,7 @@
 # GENERATED FILE - DO NOT EDIT!
 #
 # To update this file, run:
-#   bazel run //python:gazelle_python_manifest.update
+#   bazel run //:gazelle_python_manifest.update
 
 ---
 manifest:

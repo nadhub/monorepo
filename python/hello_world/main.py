@@ -1,4 +1,5 @@
 import requests
+import fastapi
 import time
 
 def hello():
@@ -11,3 +12,4 @@ if __name__ == "__main__":
     print("Waiting for 5 seconds...")
     time.sleep(5)
     print(f"requests version: {requests.__version__}")
+    print(f"fastapi version: {fastapi.__version__}")

@@ -9,6 +9,7 @@ py_binary(
     srcs = ["main.py"],
     visibility = ["//:__subpackages__"],
     deps = [
+        "@pip//fastapi",
         "@pip//requests",
     ],
 )
