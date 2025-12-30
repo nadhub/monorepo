@@ -1,4 +1,6 @@
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load")
 load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+load("@tar.bzl", "tar")
 
 py_binary(
     name = "main",
@@ -43,4 +45,24 @@ py_binary(
         "@pip//pydantic",
         "@pip//uvicorn",
     ],
+)
+
+tar(
+    name = "fastapi_app_tar",
+    srcs = [":fastapi_app"],
+    tags = ["manual"],
+)
+
+oci_image(
+    name = "image",
+    base = "@debian_python_base",
+    entrypoint = ["/python/langfuse_1/fastapi_app"],
+    tags = ["manual"],
+    tars = [":fastapi_app_tar"],
+)
+
+oci_load(
+    name = "image_load",
+    image = ":image",
+    repo_tags = ["langfuse_1:latest"],
 )
