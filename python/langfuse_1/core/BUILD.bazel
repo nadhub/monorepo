@@ -2,10 +2,13 @@ load("@rules_python//python:defs.bzl", "py_library")
 
 py_library(
     name = "core",
-    srcs = ["gemini_service.py"],
-    visibility = ["//visibility:public"],
+    srcs = [
+        "__init__.py",
+        "gemini_service.py",
+    ],
+    visibility = ["//:__subpackages__"],
     deps = [
         "//python/common/observability",
-        # "@pypi//google_genai",
+        "@pip//google_genai",
     ],
 )

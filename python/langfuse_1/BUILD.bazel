@@ -1,0 +1,27 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+
+py_binary(
+    name = "main",
+    srcs = ["main.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":langfuse_1",
+        "//python/common/observability",
+        "//python/langfuse_1/core",
+    ],
+)
+
+py_library(
+    name = "langfuse_1",
+    srcs = [
+        "config.py",
+        "main.py",
+    ],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "//python/common/observability",
+        "//python/langfuse_1/core",
+        "@pip//pydantic",
+        "@pip//pydantic_settings",
+    ],
+)

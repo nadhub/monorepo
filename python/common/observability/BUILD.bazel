@@ -1,0 +1,16 @@
+load("@rules_python//python:defs.bzl", "py_library")
+
+py_library(
+    name = "observability",
+    srcs = [
+        "__init__.py",
+        "langfuse_tracer.py",
+        "noop_tracer.py",
+        "tracer_interface.py",
+    ],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@pip//langfuse",
+        "@pip//openinference_instrumentation_google_genai",
+    ],
+)
