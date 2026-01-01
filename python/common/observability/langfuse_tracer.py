@@ -1,9 +1,8 @@
 import logging
-import os
 from contextlib import contextmanager
 from typing import Any, Generator
 
-from langfuse import Langfuse, observe
+from langfuse import Langfuse
 from openinference.instrumentation.google_genai import GoogleGenAIInstrumentor
 
 from .tracer_interface import TracerInterface
@@ -12,7 +11,9 @@ from .tracer_interface import TracerInterface
 logger = logging.getLogger("langfuse_tracer")
 logger.setLevel(logging.INFO)
 handler = logging.StreamHandler()
-handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
+handler.setFormatter(
+    logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+)
 logger.addHandler(handler)
 
 
@@ -24,7 +25,7 @@ class LangfuseTracer(TracerInterface):
     def __init__(self) -> None:
         logger.info("Initializing LangfuseTracer")
         self.langfuse = Langfuse()
-        
+
         # Initialize automatic instrumentation for Google GenAI
         # This will automatically capture calls made via the google-genai SDK
         GoogleGenAIInstrumentor().instrument()
@@ -34,7 +35,7 @@ class LangfuseTracer(TracerInterface):
     def trace(self, name: str, **kwargs) -> Generator[Any, None, None]:
         """
         Creates a trace span for manual instrumentation.
-        
+
         Args:
             name: The name of the trace.
             **kwargs: Additional arguments passed to Langfuse.
@@ -53,7 +54,7 @@ class LangfuseTracer(TracerInterface):
     def span(self, name: str, **kwargs) -> Generator[Any, None, None]:
         """
         Creates a child span within a trace.
-        
+
         Args:
             name: The name of the span.
             **kwargs: Additional arguments passed to Langfuse.
@@ -71,7 +72,7 @@ class LangfuseTracer(TracerInterface):
     def get_prompt(self, name: str) -> Any:
         """
         Retrieves a managed prompt from Langfuse.
-        
+
         Args:
             name: The name of the prompt to retrieve.
         """

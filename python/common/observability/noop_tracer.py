@@ -1,12 +1,12 @@
 from contextlib import contextmanager
-from typing import Any, Generator
+from typing import Generator
 
 from .tracer_interface import TracerInterface
 
 
 class DummyPrompt:
     """Fallback prompt object for when Langfuse is unavailable."""
-    
+
     def __init__(self, name: str) -> None:
         self.name = name
 
