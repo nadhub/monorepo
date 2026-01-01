@@ -1,4 +1,6 @@
 from abc import ABC, abstractmethod
+from typing import Any, Generator
+
 
 class TracerInterface(ABC):
     """
@@ -7,30 +9,39 @@ class TracerInterface(ABC):
     """
 
     @abstractmethod
-    def trace(self, **kwargs):
+    def trace(self, name: str, **kwargs) -> Generator[Any, None, None]:
         """
-        Abstract context manager or decorator to start a trace.
-        The signature is flexible to accommodate various tracing needs,
-        but typically it would accept a name, input, etc.
+        Abstract context manager to start a trace.
+        
+        Args:
+            name: The name of the trace.
+            **kwargs: Additional arguments for the tracing implementation.
         """
         pass
 
     @abstractmethod
-    def span(self, **kwargs):
+    def span(self, name: str, **kwargs) -> Generator[Any, None, None]:
         """
         Abstract context manager to create a span.
+        
+        Args:
+            name: The name of the span.
+            **kwargs: Additional arguments for the tracing implementation.
         """
         pass
 
     @abstractmethod
-    def get_prompt(self, name: str):
+    def get_prompt(self, name: str) -> Any:
         """
         Abstract method to retrieve a prompt by its name.
+        
+        Args:
+            name: The name of the prompt to retrieve.
         """
         pass
 
     @abstractmethod
-    def shutdown(self):
+    def shutdown(self) -> None:
         """
         Flushes and shuts down the tracer.
         """

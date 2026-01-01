@@ -1,13 +1,19 @@
 from contextlib import contextmanager
+from typing import Any, Generator
+
 from .tracer_interface import TracerInterface
 
+
 class DummyPrompt:
-    def __init__(self, name: str):
+    """Fallback prompt object for when Langfuse is unavailable."""
+    
+    def __init__(self, name: str) -> None:
         self.name = name
 
-    def compile(self, **kwargs):
-        # rudimentary compilation for fallback
+    def compile(self, **kwargs) -> str:
+        """Rudimentary compilation for fallback."""
         return f"Fallback prompt for {self.name} with args: {kwargs}"
+
 
 class NoOpTracer(TracerInterface):
     """
@@ -15,28 +21,23 @@ class NoOpTracer(TracerInterface):
     Used when observability is disabled.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         pass
 
     @contextmanager
-    def trace(self, **kwargs):
-        """
-        Does nothing.
-        """
+    def trace(self, name: str, **kwargs) -> Generator[None, None, None]:
+        """No-op trace context manager."""
         yield None
 
     @contextmanager
-    def span(self, **kwargs):
-        """
-        Does nothing.
-        """
+    def span(self, name: str, **kwargs) -> Generator[None, None, None]:
+        """No-op span context manager."""
         yield None
 
-    def get_prompt(self, name: str):
+    def get_prompt(self, name: str) -> DummyPrompt:
+        """Returns a DummyPrompt as fallback."""
         return DummyPrompt(name)
 
-    def shutdown(self):
-        """
-        Does nothing.
-        """
+    def shutdown(self) -> None:
+        """No-op shutdown."""
         pass

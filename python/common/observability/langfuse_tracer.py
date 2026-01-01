@@ -1,9 +1,11 @@
 import logging
 import os
 from contextlib import contextmanager
+from typing import Any, Generator
 
 from langfuse import Langfuse, observe
 from openinference.instrumentation.google_genai import GoogleGenAIInstrumentor
+
 from .tracer_interface import TracerInterface
 
 # Configure a specific logger for this module
@@ -13,12 +15,13 @@ handler = logging.StreamHandler()
 handler.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
 logger.addHandler(handler)
 
+
 class LangfuseTracer(TracerInterface):
     """
     Implementation of TracerInterface using Langfuse and OpenInference.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         logger.info("Initializing LangfuseTracer")
         self.langfuse = Langfuse()
         
@@ -28,21 +31,14 @@ class LangfuseTracer(TracerInterface):
         logger.info("Google GenAI instrumentation enabled")
 
     @contextmanager
-    def trace(self, name: str, **kwargs):
+    def trace(self, name: str, **kwargs) -> Generator[Any, None, None]:
         """
-        Manual tracing using Langfuse decorators/context managers needs careful handling
-        if we want to wrap blocks. However, OpenInference handles the library calls.
-        For simple wrapping, we can use the observe decorator from langfuse, 
-        or manually create spans.
+        Creates a trace span for manual instrumentation.
         
-        For this implementation, we'll expose a wrapper that uses 
-        Langfuse's `observe` functionality if possible, or just logs.
+        Args:
+            name: The name of the trace.
+            **kwargs: Additional arguments passed to Langfuse.
         """
-        # Note: @observe is typically used as a decorator. 
-        # Using it as a context manager is supported in newer versions or 
-        # via `langfuse.trace()`.
-        
-        # Let's use `langfuse.start_span()` for explicit span creation if needed.
         trace = self.langfuse.start_span(name=name, **kwargs)
         logger.debug(f"Started trace: {name} with kwargs: {kwargs}")
         try:
@@ -54,9 +50,13 @@ class LangfuseTracer(TracerInterface):
             trace.end()
 
     @contextmanager
-    def span(self, name: str, **kwargs):
+    def span(self, name: str, **kwargs) -> Generator[Any, None, None]:
         """
-        Creates a span.
+        Creates a child span within a trace.
+        
+        Args:
+            name: The name of the span.
+            **kwargs: Additional arguments passed to Langfuse.
         """
         span = self.langfuse.start_span(name=name, **kwargs)
         logger.debug(f"Started span: {name} with kwargs: {kwargs}")
@@ -68,13 +68,17 @@ class LangfuseTracer(TracerInterface):
         finally:
             span.end()
 
-    def get_prompt(self, name: str):
+    def get_prompt(self, name: str) -> Any:
         """
         Retrieves a managed prompt from Langfuse.
+        
+        Args:
+            name: The name of the prompt to retrieve.
         """
         return self.langfuse.get_prompt(name)
 
-    def shutdown(self):
+    def shutdown(self) -> None:
+        """Flushes pending events and shuts down the tracer."""
         logger.info("Flushing Langfuse events...")
         self.langfuse.flush()
         logger.info("Langfuse flushed.")
