@@ -2,8 +2,7 @@ import logging
 from contextlib import contextmanager
 from typing import Any, Generator
 
-from langfuse import Langfuse
-from openinference.instrumentation.google_genai import GoogleGenAIInstrumentor
+from langfuse import get_client
 
 from .tracer_interface import TracerInterface
 
@@ -24,12 +23,12 @@ class LangfuseTracer(TracerInterface):
 
     def __init__(self) -> None:
         logger.info("Initializing LangfuseTracer")
-        self.langfuse = Langfuse()
+        self.langfuse = get_client()
 
         # Initialize automatic instrumentation for Google GenAI
         # This will automatically capture calls made via the google-genai SDK
-        GoogleGenAIInstrumentor().instrument()
-        logger.info("Google GenAI instrumentation enabled")
+        # GoogleGenAIInstrumentor().instrument()
+        # logger.info("Google GenAI instrumentation enabled")
 
     @contextmanager
     def trace(self, name: str, **kwargs) -> Generator[Any, None, None]:
@@ -40,7 +39,13 @@ class LangfuseTracer(TracerInterface):
             name: The name of the trace.
             **kwargs: Additional arguments passed to Langfuse.
         """
+        user_id = kwargs.pop("user_id", None)
         trace = self.langfuse.start_span(name=name, **kwargs)
+        if user_id:
+            # We must update the specific trace object because start_span
+            # might not set the global context for update_current_trace to work.
+            if hasattr(trace, "update"):
+                trace.update(user_id=user_id)
         logger.debug(f"Started trace: {name} with kwargs: {kwargs}")
         try:
             yield trace
