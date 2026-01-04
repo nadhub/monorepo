@@ -6,6 +6,7 @@
 ---
 manifest:
   modules_mapping:
+    agents: openai_agents
     aiohappyeyeballs: aiohappyeyeballs
     aiohttp: aiohttp
     aiosignal: aiosignal
@@ -14,16 +15,33 @@ manifest:
     anyio: anyio
     attr: attrs
     attrs: attrs
+    authlib: authlib
     backoff: backoff
+    beartype: beartype
     bs4: beautifulsoup4
     cachetools: cachetools
     certifi: certifi
+    cffi: cffi
     charset_normalizer: charset_normalizer
     click: click
+    cloudpickle: cloudpickle
+    colorama: colorama
+    cryptography: cryptography
+    cyclopts: cyclopts
     dataclasses_json: dataclasses_json
+    diskcache: diskcache
     distro: distro
+    dns: dnspython
+    docket: pydocket
+    docstring_parser: docstring_parser
+    docutils: docutils
     dotenv: python_dotenv
+    email_validator: email_validator
+    exa_py: exa_py
+    exceptiongroup: exceptiongroup
+    fakeredis: fakeredis
     fastapi: fastapi
+    fastmcp: fastmcp
     filetype: filetype
     frozenlist: frozenlist
     google.api.annotations_pb2: googleapis_common_protos
@@ -99,15 +117,27 @@ manifest:
     google.type.quaternion_pb2: googleapis_common_protos
     google.type.timeofday_pb2: googleapis_common_protos
     greenlet: greenlet
+    griffe: griffe
     h11: h11
     httpcore: httpcore
     httpx: httpx
     httpx_sse: httpx_sse
     idna: idna
     importlib_metadata: importlib_metadata
+    jaraco.classes: jaraco.classes
+    jaraco.context: jaraco_context
+    jaraco.functools: jaraco_functools
+    jeepney: jeepney
     jiter: jiter
     jsonpatch: jsonpatch
     jsonpointer: jsonpointer
+    jsonschema: jsonschema
+    jsonschema_path: jsonschema_path
+    jsonschema_specifications: jsonschema_specifications
+    jwt: PyJWT
+    key_value.aio: py_key_value_aio
+    key_value.shared: py_key_value_shared
+    keyring: keyring
     langchain: langchain
     langchain_classic: langchain_classic
     langchain_community: langchain_community
@@ -141,13 +171,21 @@ manifest:
     langgraph.warnings: langgraph
     langgraph_sdk: langgraph_sdk
     langsmith: langsmith
+    lupa: lupa
+    markdown_it: markdown_it_py
     marshmallow: marshmallow
+    mcp: mcp
+    mdurl: mdurl
+    more_itertools: more_itertools
     multidict: multidict
+    multipart: python_multipart
     mypy_extensions: mypy_extensions
     numpy: numpy
     openai: openai
+    openapi_pydantic: openapi_pydantic
     openinference.instrumentation: openinference_instrumentation
     openinference.instrumentation.google_genai: openinference_instrumentation_google_genai
+    openinference.instrumentation.openai_agents: openinference_instrumentation_openai_agents
     openinference.semconv: openinference_semantic_conventions
     opentelemetry.attributes: opentelemetry_api
     opentelemetry.baggage: opentelemetry_api
@@ -155,6 +193,7 @@ manifest:
     opentelemetry.environment_variables: opentelemetry_api
     opentelemetry.exporter.otlp.proto.common: opentelemetry_exporter_otlp_proto_common
     opentelemetry.exporter.otlp.proto.http: opentelemetry_exporter_otlp_proto_http
+    opentelemetry.exporter.prometheus: opentelemetry_exporter_prometheus
     opentelemetry.instrumentation.auto_instrumentation: opentelemetry_instrumentation
     opentelemetry.instrumentation.bootstrap: opentelemetry_instrumentation
     opentelemetry.instrumentation.bootstrap_gen: opentelemetry_instrumentation
@@ -186,24 +225,43 @@ manifest:
     orjson: orjson
     ormsgpack: ormsgpack
     packaging: packaging
+    pathable: pathable
+    pathvalidate: pathvalidate
+    platformdirs: platformdirs
+    prometheus_client: prometheus_client
     propcache: propcache
     pyasn1: pyasn1
     pyasn1_modules: pyasn1_modules
+    pycparser: pycparser
     pydantic: pydantic
     pydantic_core: pydantic_core
     pydantic_settings: pydantic_settings
+    pygments: pygments
+    pyperclip: pyperclip
+    python_multipart: python_multipart
+    pythonjsonlogger: python_json_logger
+    redis: redis
+    referencing: referencing
     regex: regex
     requests: requests
     requests_toolbelt: requests_toolbelt
+    rich: rich
+    rich_rst: rich_rst
+    rpds: rpds_py
     rsa: rsa
+    secretstorage: secretstorage
+    shellingham: shellingham
     sniffio: sniffio
+    sortedcontainers: sortedcontainers
     soupsieve: soupsieve
     sqlalchemy: sqlalchemy
+    sse_starlette: sse_starlette
     starlette: starlette
     tenacity: tenacity
     tiktoken: tiktoken
     tiktoken_ext.openai_public: tiktoken
     tqdm: tqdm
+    typer: typer
     typing_extensions: typing_extensions
     typing_inspect: typing_inspect
     typing_inspection: typing_inspection
@@ -219,4 +277,4 @@ manifest:
     zstandard: zstandard
   pip_repository:
     name: pip
-integrity: 27cec696054503bf375730c36d60f2fee416f0fabb9fcaeb08a17493eab5166d
+integrity: 347067c87f2bb5578444935eff3a979c2d2c2806f62c993ea8d7fdddb1a19b9c
