@@ -307,6 +307,10 @@ fastapi==0.128.0 \
     --hash=sha256:1cc179e1cef10a6be60ffe429f79b829dce99d8de32d7acb7e6c8dfdf7f2645a \
     --hash=sha256:aebd93f9716ee3b4f4fcfe13ffb7cf308d99c9f3ab5622d8877441072561582d
     # via -r python/requirements.in
+filetype==1.2.0 \
+    --hash=sha256:66b56cd6474bf41d8c54660347d37afcc3f7d1970648de365c102ef77548aadb \
+    --hash=sha256:7ce71b6880181241cf7ac8697a2f1eb6a8bd9b429f7ad6d27b8db9ba5f1c2d25
+    # via langchain-google-genai
 frozenlist==1.8.0 \
     --hash=sha256:0325024fe97f94c41c08872db482cf8ac4800d80e79222c6b0b7b162d5b13686 \
     --hash=sha256:032efa2674356903cd0261c4317a561a6850f3ac864a63fc1583147fb05a79b0 \
@@ -448,7 +452,9 @@ google-auth[requests]==2.45.0 \
 google-genai==1.56.0 \
     --hash=sha256:0491af33c375f099777ae207d9621f044e27091fafad4c50e617eba32165e82f \
     --hash=sha256:9e6b11e0c105ead229368cb5849a480e4d0185519f8d9f538d61ecfcf193b052
-    # via -r python/requirements.in
+    # via
+    #   -r python/requirements.in
+    #   langchain-google-genai
 googleapis-common-protos==1.72.0 \
     --hash=sha256:4299c5a82d5ae1a9702ada957347726b167f9f8d1fc352477702a1e851ff4038 \
     --hash=sha256:e55a601c1b32b52d7a3e65f43563e2aa61bcd737998ee672ac9b951cd49319f5
@@ -671,11 +677,16 @@ langchain-core==1.2.6 \
     #   langchain
     #   langchain-classic
     #   langchain-community
+    #   langchain-google-genai
     #   langchain-openai
     #   langchain-text-splitters
     #   langgraph
     #   langgraph-checkpoint
     #   langgraph-prebuilt
+langchain-google-genai==4.1.2 \
+    --hash=sha256:89790f2e3ca113f7e45883f541a834120d279e21f235fffc491c81cd1af11fdd \
+    --hash=sha256:aa0dd7807a9a15651d10cd228c574f23fe46e2ce62921bf21d73a63869ecd814
+    # via -r python/requirements.in
 langchain-openai==1.1.6 \
     --hash=sha256:c42d04a67a85cee1d994afe400800d2b09ebf714721345f0b651eb06a02c3948 \
     --hash=sha256:e306612654330ae36fb6bbe36db91c98534312afade19e140c3061fe4208dac8
@@ -1319,6 +1330,7 @@ pydantic==2.12.5 \
     #   langchain
     #   langchain-classic
     #   langchain-core
+    #   langchain-google-genai
     #   langfuse
     #   langgraph
     #   langsmith
@@ -1811,7 +1823,9 @@ tiktoken==0.12.0 \
     --hash=sha256:f61c0aea5565ac82e2ec50a05e02a6c44734e91b51c10510b084ea1b8e633a71 \
     --hash=sha256:fc530a28591a2d74bce821d10b418b26a094bf33839e69042a6e86ddb7a7fb27 \
     --hash=sha256:ffc5288f34a8bc02e1ea7047b8d041104791d2ddbf42d1e5fa07822cbffe16bd
-    # via langchain-openai
+    # via
+    #   -r python/requirements.in
+    #   langchain-openai
 tqdm==4.67.1 \
     --hash=sha256:26445eca388f82e72884e0d580d5464cd801a3ea01e63e5601bdff9ba6a48de2 \
     --hash=sha256:f8aef9c52c08c13a65f30ea34f4e5aac3fd1a34959879d7e59e63027286627f2

@@ -13,7 +13,7 @@
 from typing import Annotated, TypedDict
 
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langfuse import Evaluation, get_client
 from langfuse.experiment import ExperimentItem
 
@@ -50,8 +50,8 @@ class RetrieverRelevanceGrade(TypedDict):
     ]
 
 
-retrieval_relevance_llm = ChatOpenAI(
-    model="gpt-4o", temperature=0
+retrieval_relevance_llm = ChatGoogleGenerativeAI(
+    model="gemini-2.0-flash", temperature=0
 ).with_structured_output(RetrieverRelevanceGrade, method="json_schema", strict=True)
 
 retrieval_relevance_instructions = """You are evaluating the relevance of a set of chunks to a question. 

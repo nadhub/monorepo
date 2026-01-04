@@ -4,7 +4,7 @@
 from typing import Annotated, TypedDict
 
 from dotenv import load_dotenv
-from langchain_openai import ChatOpenAI
+from langchain_google_genai import ChatGoogleGenerativeAI
 from langfuse import Evaluation, get_client
 from langfuse.experiment import ExperimentItem
 
@@ -30,9 +30,9 @@ class AnswerRelevanceGrade(TypedDict):
     ]
 
 
-answer_relevance_llm = ChatOpenAI(model="gpt-4o", temperature=0).with_structured_output(
-    AnswerRelevanceGrade, method="json_schema", strict=True
-)
+answer_relevance_llm = ChatGoogleGenerativeAI(
+    model="gemini-2.0-flash", temperature=0
+).with_structured_output(AnswerRelevanceGrade, method="json_schema", strict=True)
 
 answer_relevance_instructions = """You are evaluating the relevance of an answer to a question.
 You will be given a QUESTION, an ANSWER, and an EXPECTED OUTPUT.
@@ -78,9 +78,9 @@ class FaithfulnessGrade(TypedDict):
     ]
 
 
-faithfulness_llm = ChatOpenAI(model="gpt-4o", temperature=0).with_structured_output(
-    FaithfulnessGrade, method="json_schema", strict=True
-)
+faithfulness_llm = ChatGoogleGenerativeAI(
+    model="gemini-2.0-flash", temperature=0
+).with_structured_output(FaithfulnessGrade, method="json_schema", strict=True)
 
 faithfulness_instructions = """You are evaluating the faithfulness of an answer to the source documents.
 You will be given an ANSWER and the FACTS (source documents) that were used to generate it.

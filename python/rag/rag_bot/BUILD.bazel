@@ -6,7 +6,7 @@ py_binary(
     visibility = ["//:__subpackages__"],
     deps = [
         ":rag_bot",
-        "@pip//langchain_openai",
+        "@pip//langchain_google_genai",
         "@pip//langfuse",
         "@pip//python_dotenv",
     ],
@@ -21,10 +21,11 @@ py_binary(
         "@pip//langchain",
         "@pip//langchain_community",
         "@pip//langchain_core",
-        "@pip//langchain_openai",
+        "@pip//langchain_google_genai",
         "@pip//langchain_text_splitters",
         "@pip//langfuse",
         "@pip//python_dotenv",
+        "@pip//tiktoken",
     ],
 )
 
@@ -41,9 +42,10 @@ py_library(
         "@pip//langchain",
         "@pip//langchain_community",
         "@pip//langchain_core",
-        "@pip//langchain_openai",
+        "@pip//langchain_google_genai",
         "@pip//langchain_text_splitters",
         "@pip//langfuse",
         "@pip//python_dotenv",
+        "@pip//tiktoken",
     ],
 )

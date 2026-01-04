@@ -24,6 +24,7 @@ manifest:
     distro: distro
     dotenv: python_dotenv
     fastapi: fastapi
+    filetype: filetype
     frozenlist: frozenlist
     google.api.annotations_pb2: googleapis_common_protos
     google.api.auth_pb2: googleapis_common_protos
@@ -111,6 +112,7 @@ manifest:
     langchain_classic: langchain_classic
     langchain_community: langchain_community
     langchain_core: langchain_core
+    langchain_google_genai: langchain_google_genai
     langchain_openai: langchain_openai
     langchain_text_splitters: langchain_text_splitters
     langfuse: langfuse
@@ -217,4 +219,4 @@ manifest:
     zstandard: zstandard
   pip_repository:
     name: pip
-integrity: fb8dcd6db14fee5c9e9cd1a6286b422528f9ce2b44c5954dea6c5a75091f6242
+integrity: 27cec696054503bf375730c36d60f2fee416f0fabb9fcaeb08a17493eab5166d
