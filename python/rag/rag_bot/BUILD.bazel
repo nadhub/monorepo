@@ -1,0 +1,46 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+
+py_binary(
+    name = "answer_evaluation",
+    srcs = ["answer_evaluation.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":rag_bot",
+        "@pip//langchain_openai",
+        "@pip//langfuse",
+        "@pip//python_dotenv",
+    ],
+)
+
+py_binary(
+    name = "main",
+    srcs = ["main.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@pip//langchain_community",
+        "@pip//langchain_core",
+        "@pip//langchain_openai",
+        "@pip//langchain_text_splitters",
+        "@pip//langfuse",
+        "@pip//python_dotenv",
+    ],
+)
+
+py_library(
+    name = "rag_bot",
+    srcs = [
+        "__init__.py",
+        "answer_evaluation.py",
+        "chunk_evaluation.py",
+        "main.py",
+    ],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@pip//langchain_community",
+        "@pip//langchain_core",
+        "@pip//langchain_openai",
+        "@pip//langchain_text_splitters",
+        "@pip//langfuse",
+        "@pip//python_dotenv",
+    ],
+)

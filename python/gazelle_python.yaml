@@ -6,17 +6,25 @@
 ---
 manifest:
   modules_mapping:
+    aiohappyeyeballs: aiohappyeyeballs
+    aiohttp: aiohttp
+    aiosignal: aiosignal
     annotated_doc: annotated_doc
     annotated_types: annotated_types
     anyio: anyio
+    attr: attrs
+    attrs: attrs
     backoff: backoff
+    bs4: beautifulsoup4
     cachetools: cachetools
     certifi: certifi
     charset_normalizer: charset_normalizer
     click: click
+    dataclasses_json: dataclasses_json
     distro: distro
     dotenv: python_dotenv
     fastapi: fastapi
+    frozenlist: frozenlist
     google.api.annotations_pb2: googleapis_common_protos
     google.api.auth_pb2: googleapis_common_protos
     google.api.backend_pb2: googleapis_common_protos
@@ -89,13 +97,52 @@ manifest:
     google.type.postal_address_pb2: googleapis_common_protos
     google.type.quaternion_pb2: googleapis_common_protos
     google.type.timeofday_pb2: googleapis_common_protos
+    greenlet: greenlet
     h11: h11
     httpcore: httpcore
     httpx: httpx
+    httpx_sse: httpx_sse
     idna: idna
     importlib_metadata: importlib_metadata
     jiter: jiter
+    jsonpatch: jsonpatch
+    jsonpointer: jsonpointer
+    langchain: langchain
+    langchain_classic: langchain_classic
+    langchain_community: langchain_community
+    langchain_core: langchain_core
+    langchain_openai: langchain_openai
+    langchain_text_splitters: langchain_text_splitters
     langfuse: langfuse
+    langgraph.cache.base: langgraph_checkpoint
+    langgraph.cache.memory: langgraph_checkpoint
+    langgraph.cache.redis: langgraph_checkpoint
+    langgraph.channels: langgraph
+    langgraph.checkpoint.base: langgraph_checkpoint
+    langgraph.checkpoint.memory: langgraph_checkpoint
+    langgraph.checkpoint.serde: langgraph_checkpoint
+    langgraph.config: langgraph
+    langgraph.constants: langgraph
+    langgraph.errors: langgraph
+    langgraph.func: langgraph
+    langgraph.graph: langgraph
+    langgraph.managed: langgraph
+    langgraph.prebuilt: langgraph_prebuilt
+    langgraph.pregel: langgraph
+    langgraph.runtime: langgraph
+    langgraph.store.base: langgraph_checkpoint
+    langgraph.store.memory: langgraph_checkpoint
+    langgraph.types: langgraph
+    langgraph.typing: langgraph
+    langgraph.utils: langgraph
+    langgraph.version: langgraph
+    langgraph.warnings: langgraph
+    langgraph_sdk: langgraph_sdk
+    langsmith: langsmith
+    marshmallow: marshmallow
+    multidict: multidict
+    mypy_extensions: mypy_extensions
+    numpy: numpy
     openai: openai
     openinference.instrumentation: openinference_instrumentation
     openinference.instrumentation.google_genai: openinference_instrumentation_google_genai
@@ -134,25 +181,40 @@ manifest:
     opentelemetry.util.re: opentelemetry_api
     opentelemetry.util.types: opentelemetry_api
     opentelemetry.version: opentelemetry_api
+    orjson: orjson
+    ormsgpack: ormsgpack
     packaging: packaging
+    propcache: propcache
     pyasn1: pyasn1
     pyasn1_modules: pyasn1_modules
     pydantic: pydantic
     pydantic_core: pydantic_core
     pydantic_settings: pydantic_settings
+    regex: regex
     requests: requests
+    requests_toolbelt: requests_toolbelt
     rsa: rsa
     sniffio: sniffio
+    soupsieve: soupsieve
+    sqlalchemy: sqlalchemy
     starlette: starlette
     tenacity: tenacity
+    tiktoken: tiktoken
+    tiktoken_ext.openai_public: tiktoken
     tqdm: tqdm
     typing_extensions: typing_extensions
+    typing_inspect: typing_inspect
     typing_inspection: typing_inspection
     urllib3: urllib3
+    uuid_utils: uuid_utils
     uvicorn: uvicorn
     websockets: websockets
     wrapt: wrapt
+    xxhash: xxhash
+    yaml: pyyaml
+    yarl: yarl
     zipp: zipp
+    zstandard: zstandard
   pip_repository:
     name: pip
-integrity: 80e8693cc159e73abb8bf91f2924bdb5aa92d8e9c049ca694599136bcc33bd5f
+integrity: fb8dcd6db14fee5c9e9cd1a6286b422528f9ce2b44c5954dea6c5a75091f6242
