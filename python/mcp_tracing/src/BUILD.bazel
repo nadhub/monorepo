@@ -1,0 +1,61 @@
+load("@rules_python//python:defs.bzl", "py_binary", "py_library")
+
+py_binary(
+    name = "main",
+    srcs = ["main.py"],
+    data = [":search_server"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":config",
+        "//python/mcp_tracing/src/utils",
+        "@pip//google_genai",
+        "@pip//langfuse",
+        "@pip//litellm",
+        "@pip//openai_agents",
+        "@pip//openinference_instrumentation_google_genai",
+        "@pip//python_dotenv",
+    ],
+)
+
+py_binary(
+    name = "search_server",
+    srcs = ["search_server.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":config",
+        "//python/mcp_tracing/src/utils",
+        "@pip//exa_py",
+        "@pip//fastmcp",
+        "@pip//langfuse",
+        "@pip//python_dotenv",
+    ],
+)
+
+py_library(
+    name = "config",
+    srcs = ["config.py"],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        "@pip//pydantic",
+        "@pip//pydantic_settings",
+    ],
+)
+
+py_library(
+    name = "src",
+    srcs = [
+        "main.py",
+        "search_server.py",
+    ],
+    visibility = ["//:__subpackages__"],
+    deps = [
+        ":config",
+        "//python/mcp_tracing/src/utils",
+        "@pip//exa_py",
+        "@pip//fastmcp",
+        "@pip//langfuse",
+        "@pip//openai_agents",
+        "@pip//openinference_instrumentation_google_genai",
+        "@pip//python_dotenv",
+    ],
+)

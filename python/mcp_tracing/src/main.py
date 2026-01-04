@@ -1,23 +1,22 @@
 import asyncio
 import os
 
-from agents import Agent, Runner
+from agents import Agent, Runner, set_tracing_disabled
+from agents.extensions.models.litellm_model import LitellmModel
 from agents.mcp import MCPServer, MCPServerStdio
-from dotenv import load_dotenv
 from langfuse import get_client, observe
 
 # from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
 from openinference.instrumentation.google_genai import GoogleGenAIInstrumentor
-from utils.otel_utils import TracedMCPServer
 
-load_dotenv()
+from python.mcp_tracing.src.config import AppConfig
+from python.mcp_tracing.src.utils.otel_utils import TracedMCPServer
 
+config = AppConfig()
 langfuse = get_client()
-# OpenAIAgentsInstrumentor().instrument()
+# Disable OpenAI's built-in tracing since we're using Langfuse
+set_tracing_disabled(True)
 GoogleGenAIInstrumentor().instrument()
-
-# Configure agents to use Google GenAI
-os.environ["LLM_API_PROVIDER"] = "google_genai"
 
 
 async def run(mcp_server: MCPServer):
@@ -25,7 +24,10 @@ async def run(mcp_server: MCPServer):
 
     agent = Agent(
         name="Assistant",
-        model="gemini-1.5-flash",
+        model=LitellmModel(
+            model="gemini/gemini-2.5-flash",
+            api_key=config.GOOGLE_API_KEY,
+        ),
         instructions="Use the tools to answer the users question.",
         mcp_servers=[traced_server],
     )
@@ -50,8 +52,9 @@ async def main():
     async with MCPServerStdio(
         name="Search server",
         params={
-            "command": "fastmcp",
-            "args": ["run", "--no-banner", "./src/search_server.py"],
+            "command": "python/mcp_tracing/src/search_server",
+            "args": [],
+            "env": dict(os.environ),
         },
         client_session_timeout_seconds=30,
     ) as server:

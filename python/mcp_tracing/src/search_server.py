@@ -1,18 +1,19 @@
-import os
-
-from dotenv import load_dotenv
 from exa_py import Exa
 from fastmcp import FastMCP
 from langfuse import Langfuse, observe
 
-from utils.otel_utils import with_otel_context_from_meta
+from python.mcp_tracing.src.config import AppConfig
+from python.mcp_tracing.src.utils.otel_utils import with_otel_context_from_meta
 
-load_dotenv()
-
+config = AppConfig()
 langfuse = Langfuse()
 
+print("##############")
+print(config.EXA_API_KEY)
+print("##############")
+
 mcp = FastMCP("Search server")
-exa = Exa(api_key=os.getenv("EXA_API_KEY"))
+exa = Exa(api_key=config.EXA_API_KEY)
 
 
 @mcp.tool()

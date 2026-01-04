@@ -42,8 +42,11 @@ manifest:
     fakeredis: fakeredis
     fastapi: fastapi
     fastmcp: fastmcp
+    fastuuid: fastuuid
+    filelock: filelock
     filetype: filetype
     frozenlist: frozenlist
+    fsspec: fsspec
     google.api.annotations_pb2: googleapis_common_protos
     google.api.auth_pb2: googleapis_common_protos
     google.api.backend_pb2: googleapis_common_protos
@@ -118,16 +121,20 @@ manifest:
     google.type.timeofday_pb2: googleapis_common_protos
     greenlet: greenlet
     griffe: griffe
+    grpc: grpcio
     h11: h11
+    hf_xet: hf_xet
     httpcore: httpcore
     httpx: httpx
     httpx_sse: httpx_sse
+    huggingface_hub: huggingface_hub
     idna: idna
     importlib_metadata: importlib_metadata
     jaraco.classes: jaraco.classes
     jaraco.context: jaraco_context
     jaraco.functools: jaraco_functools
     jeepney: jeepney
+    jinja2: jinja2
     jiter: jiter
     jsonpatch: jsonpatch
     jsonpointer: jsonpointer
@@ -171,8 +178,10 @@ manifest:
     langgraph.warnings: langgraph
     langgraph_sdk: langgraph_sdk
     langsmith: langsmith
+    litellm: litellm
     lupa: lupa
     markdown_it: markdown_it_py
+    markupsafe: markupsafe
     marshmallow: marshmallow
     mcp: mcp
     mdurl: mdurl
@@ -260,8 +269,9 @@ manifest:
     tenacity: tenacity
     tiktoken: tiktoken
     tiktoken_ext.openai_public: tiktoken
+    tokenizers: tokenizers
     tqdm: tqdm
-    typer: typer
+    typer: typer_slim
     typing_extensions: typing_extensions
     typing_inspect: typing_inspect
     typing_inspection: typing_inspection
@@ -277,4 +287,4 @@ manifest:
     zstandard: zstandard
   pip_repository:
     name: pip
-integrity: 347067c87f2bb5578444935eff3a979c2d2c2806f62c993ea8d7fdddb1a19b9c
+integrity: 4dd13e472d876ec5401115a47a2d6f959275c160ff934e9840b2293d91471dce

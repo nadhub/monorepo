@@ -5,7 +5,7 @@
 # See: https://github.com/timvw/fastmcp-otel-langfuse/blob/main/LICENSE
 #
 # Copied on: 2025-10-15
-# Modifications: 
+# Modifications:
 # - Added `TracedMCPServer` wrapper class for transparent context propagation
 
 """
@@ -137,34 +137,36 @@ def with_otel_context_from_meta(func: F) -> F:
 class TracedMCPServer:
     """
     Wrapper that adds OpenTelemetry context propagation to any MCP server.
-    
+
     This wrapper automatically injects the current OTEL context into the _meta
     field of all tool calls, enabling distributed tracing across MCP servers.
-    
+
     Usage:
         async with MCPServerStdio(...) as server:
             traced_server = TracedMCPServer(server)
             agent = Agent(mcp_servers=[traced_server], ...)
-    
+
     The wrapper is transparent - it delegates all methods to the underlying
     server except for call_tool, which it wraps to inject tracing context.
-    
+
     This wrapper works with any MCP server implementation (MCPServerStdio,
     MCPServerHTTP, or custom implementations) without requiring changes to
     the underlying server or server code.
     """
-    
+
     def __init__(self, server: MCPServer):
         self._server = server
-    
-    async def call_tool(self, tool_name: str, arguments: dict[str, Any] | None = None) -> Any:
+
+    async def call_tool(
+        self, tool_name: str, arguments: dict[str, Any] | None = None
+    ) -> Any:
         if arguments is None:
             arguments = {}
-        
+
         # Inject current OTEL context into _meta field
         arguments["_meta"] = inject_otel_context_to_meta()
-        
+
         return await self._server.call_tool(tool_name, arguments)
-    
+
     def __getattr__(self, name: str) -> Any:
         return getattr(self._server, name)
