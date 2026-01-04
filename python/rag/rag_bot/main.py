@@ -20,7 +20,7 @@ urls = [
 langfuse = get_client()
 langfuse_handler = CallbackHandler()
 
-bot = ChatGoogleGenerativeAI(model="gemini-2.0-flash")
+bot = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
 
 
 # Add decorator so this function is traced in Lngfuse

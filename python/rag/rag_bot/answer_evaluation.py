@@ -31,7 +31,7 @@ class AnswerRelevanceGrade(TypedDict):
 
 
 answer_relevance_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash", temperature=0
+    model="gemini-2.5-flash", temperature=0
 ).with_structured_output(AnswerRelevanceGrade, method="json_schema", strict=True)
 
 answer_relevance_instructions = """You are evaluating the relevance of an answer to a question.
@@ -79,7 +79,7 @@ class FaithfulnessGrade(TypedDict):
 
 
 faithfulness_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash", temperature=0
+    model="gemini-2.5-flash", temperature=0
 ).with_structured_output(FaithfulnessGrade, method="json_schema", strict=True)
 
 faithfulness_instructions = """You are evaluating the faithfulness of an answer to the source documents.

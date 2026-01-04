@@ -51,7 +51,7 @@ class RetrieverRelevanceGrade(TypedDict):
 
 
 retrieval_relevance_llm = ChatGoogleGenerativeAI(
-    model="gemini-2.0-flash", temperature=0
+    model="gemini-2.5-flash", temperature=0
 ).with_structured_output(RetrieverRelevanceGrade, method="json_schema", strict=True)
 
 retrieval_relevance_instructions = """You are evaluating the relevance of a set of chunks to a question. 
