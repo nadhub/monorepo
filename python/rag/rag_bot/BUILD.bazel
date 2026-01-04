@@ -17,6 +17,8 @@ py_binary(
     srcs = ["main.py"],
     visibility = ["//:__subpackages__"],
     deps = [
+        "@pip//beautifulsoup4",
+        "@pip//langchain",
         "@pip//langchain_community",
         "@pip//langchain_core",
         "@pip//langchain_openai",
@@ -36,6 +38,7 @@ py_library(
     ],
     visibility = ["//:__subpackages__"],
     deps = [
+        "@pip//langchain",
         "@pip//langchain_community",
         "@pip//langchain_core",
         "@pip//langchain_openai",
