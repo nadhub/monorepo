@@ -8,10 +8,6 @@ from python.mcp_tracing.src.utils.otel_utils import with_otel_context_from_meta
 config = AppConfig()
 langfuse = Langfuse()
 
-print("##############")
-print(config.EXA_API_KEY)
-print("##############")
-
 mcp = FastMCP("Search server")
 exa = Exa(api_key=config.EXA_API_KEY)
 
