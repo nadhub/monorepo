@@ -42,5 +42,20 @@ def search(query: str, _meta: dict = None) -> str:
     return result
 
 
+@mcp.tool()
+@with_otel_context_from_meta
+@observe(name="add_two_ints")
+def add(a: int, b: int, _meta: dict = None) -> int:
+    """Add two integers"""
+    result = a + b
+    langfuse.update_current_trace(
+        metadata={
+            "result": result,
+        }
+    )
+    langfuse.flush()
+    return result
+
+
 if __name__ == "__main__":
     mcp.run(transport="stdio")
