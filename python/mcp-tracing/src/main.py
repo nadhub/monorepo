@@ -1,16 +1,23 @@
 import asyncio
+import os
 
 from agents import Agent, Runner
 from agents.mcp import MCPServer, MCPServerStdio
 from dotenv import load_dotenv
 from langfuse import get_client, observe
-from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
+
+# from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
+from openinference.instrumentation.google_genai import GoogleGenAIInstrumentor
 from utils.otel_utils import TracedMCPServer
 
 load_dotenv()
 
 langfuse = get_client()
-OpenAIAgentsInstrumentor().instrument()
+# OpenAIAgentsInstrumentor().instrument()
+GoogleGenAIInstrumentor().instrument()
+
+# Configure agents to use Google GenAI
+os.environ["LLM_API_PROVIDER"] = "google_genai"
 
 
 async def run(mcp_server: MCPServer):
@@ -18,7 +25,7 @@ async def run(mcp_server: MCPServer):
 
     agent = Agent(
         name="Assistant",
-        model="openai/gpt-4o-mini",
+        model="gemini-1.5-flash",
         instructions="Use the tools to answer the users question.",
         mcp_servers=[traced_server],
     )
