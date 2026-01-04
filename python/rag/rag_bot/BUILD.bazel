@@ -6,6 +6,7 @@ py_binary(
     visibility = ["//:__subpackages__"],
     deps = [
         ":rag_bot",
+        "@pip//beautifulsoup4",
         "@pip//langchain_google_genai",
         "@pip//langfuse",
         "@pip//python_dotenv",

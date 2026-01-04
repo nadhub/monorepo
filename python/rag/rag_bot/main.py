@@ -69,7 +69,7 @@ def get_retriever(
 
     vectorstore = InMemoryVectorStore.from_documents(
         documents=doc_splits,
-        embedding=GoogleGenerativeAIEmbeddings(model="models/embedding-001"),
+        embedding=GoogleGenerativeAIEmbeddings(model="text-embedding-004"),
     )
 
     return vectorstore.as_retriever(k=k)

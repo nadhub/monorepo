@@ -104,7 +104,7 @@ def faithfulness_evaluator(*, input, output, expected_output, metadata, **kwargs
         faithfulness_instructions
         + "\n\nANSWER: "
         + output["answer"]
-        + "\n\FACTS: "
+        + "\n\nFACTS: "
         + "\n\n".join(doc.page_content for doc in output["documents"])
     )
 
