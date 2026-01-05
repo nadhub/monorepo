@@ -4,11 +4,11 @@ py_library(
     name = "core",
     srcs = [
         "__init__.py",
-        "gemini_service.py",
+        "llm_service.py",
     ],
     visibility = ["//:__subpackages__"],
     deps = [
         "//python/common/observability",
-        "@pip//google_genai",
+        "@pip//litellm",
     ],
 )

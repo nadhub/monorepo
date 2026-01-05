@@ -7,8 +7,9 @@ class AppConfig(BaseSettings):
     Application Configuration using Pydantic Settings.
     """
     
-    # Google GenAI Settings
-    GOOGLE_API_KEY: str = Field(..., description="API Key for Google GenAI")
+    # OpenAI-compatible LLM Settings
+    OPENAI_API_KEY: str = Field(..., description="API Key for OpenAI-compatible LLM")
+    LLM_MODEL: str = Field("gpt-4o-mini", description="Model name to use with LiteLLM")
     
     # App Settings
     ROOT_PATH: str = Field("", description="Root path for the API", validation_alias="ROOT_PATH")

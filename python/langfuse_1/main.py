@@ -2,7 +2,7 @@ import logging
 import sys
 
 from python.langfuse_1.config import AppConfig
-from python.langfuse_1.core.gemini_service import GeminiService
+from python.langfuse_1.core.llm_service import LLMService
 from python.common.observability.tracer_interface import TracerInterface
 
 # Configure root logger
@@ -30,7 +30,7 @@ def main():
 
         # 2. Composition Root: Wire up dependencies
         tracer = get_tracer(config)
-        service = GeminiService(api_key=config.GOOGLE_API_KEY, tracer=tracer)
+        service = LLMService(api_key=config.OPENAI_API_KEY, tracer=tracer, model_name=config.LLM_MODEL)
 
         # 3. Run Application Logic
         prompt = "Write a haiku about a software engineer building a compiler."

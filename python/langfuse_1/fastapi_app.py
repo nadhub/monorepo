@@ -9,7 +9,7 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
 
 from python.langfuse_1.config import AppConfig
-from python.langfuse_1.core.gemini_service import GeminiService
+from python.langfuse_1.core.llm_service import LLMService
 from python.common.m_fastAPI.fastapi_base import create_base_app
 
 app_config = AppConfig()
@@ -23,7 +23,7 @@ else:
     tracer = NoOpTracer()
 
 # Initialize Service
-gemini_service = GeminiService(api_key=app_config.GOOGLE_API_KEY, tracer=tracer)
+llm_service = LLMService(api_key=app_config.OPENAI_API_KEY, tracer=tracer, model_name=app_config.LLM_MODEL)
 
 # Create Base App
 app = create_base_app(root_path=app_config.ROOT_PATH)
@@ -45,11 +45,11 @@ def generate_recipe(request: RecipeRequest):
         # We manually trace this request if observability is enabled
         # Ideally, we would use middleware for full request tracing,
         # but the requirement is "endpoint should send trace".
-        # Since GeminiService already has tracing, calling it will generate traces.
+        # Since LLMService already has tracing, calling it will generate traces.
         # But let's wrap the endpoint logic in a span as well for better visibility.
         
         with tracer.trace(name="POST /gen-recipe", input=request.model_dump()) as span:
-            result = gemini_service.generate_content(request.prompt)
+            result = llm_service.generate_content(request.prompt)
             if span and hasattr(span, "update"):
                 span.update(output=result)
             return {"recipe": result}
@@ -65,7 +65,7 @@ def generate_joke(request: JokeRequest):
         # Trace the request
         with tracer.trace(name="POST /gen-joke", input=request.model_dump()) as span:
             # This calls the service which fetches the managed prompt
-            result = gemini_service.generate_joke(request.topic)
+            result = llm_service.generate_joke(request.topic)
             if span and hasattr(span, "update"):
                 span.update(output=result)
             return {"joke": result}
