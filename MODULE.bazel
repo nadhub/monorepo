@@ -99,7 +99,13 @@ oci.pull(
     image = "python:3.12-slim-bookworm",
     platforms = ["linux/amd64"],
 )
-use_repo(oci, "debian_python_base", "debian_python_base_linux_amd64")
+oci.pull(
+    name = "distroless_nodejs",
+    image = "gcr.io/distroless/nodejs22-debian12",
+    platforms = ["linux/amd64"],
+    tag = "latest",
+)
+use_repo(oci, "debian_python_base", "debian_python_base_linux_amd64", "distroless_nodejs", "distroless_nodejs_linux_amd64")
 
 ####################################################
 

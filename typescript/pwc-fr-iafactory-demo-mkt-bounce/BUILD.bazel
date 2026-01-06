@@ -3,6 +3,8 @@ load("@aspect_rules_js//js:defs.bzl", "js_run_binary", "js_run_devserver")
 load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
 load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
 load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@tar.bzl", "mutate", "tar")
+load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load", "oci_push")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -14,7 +16,7 @@ BACKEND_URL = select({
 })
 
 BASE_HREF = select({
-    "//conditions:default": "/",
+    "//conditions:default": "/mkt-bounce",
 })
 
 # Generate environment.prod.ts from template with substituted values
@@ -23,7 +25,7 @@ expand_template(
     out = "src/environments/environment.prod.ts",
     substitutions = {
         "${BACKEND_URL}": "https://projecthub-qa.fr.pwcglb.com/demo-mkt-bounce-backend-service",
-        "${BASE_HREF}": "/",
+        "${BASE_HREF}": "/mkt-bounce-front-service/",
     },
     template = "src/environments/environment.prod.ts.tpl",
 )
@@ -203,4 +205,81 @@ js_run_binary(
     ],
     chdir = package_name(),
     tool = ":ng",
+)
+
+####################################################
+# SSR Production Build & OCI Container
+####################################################
+
+# SSR production build target
+# Use: bazel build //typescript/pwc-fr-iafactory-demo-mkt-bounce:build_ssr
+js_run_binary(
+    name = "build_ssr",
+    srcs = [
+        ":srcs",
+        ":node_modules",
+        "//typescript:node_modules",
+    ],
+    args = [
+        "run",
+        "email-bounce-frontend:build-bazel-ssr",
+    ],
+    chdir = package_name(),
+    out_dirs = ["dist/email-bounce-frontend"],
+    tool = ":ng",
+    execution_requirements = {
+        "no-sandbox": "1",
+        "no-remote-exec": "1",
+    },
+    env = {
+        "NODE_PATH": "../node_modules",
+    },
+)
+
+# Create tar archive of SSR dist for OCI image
+# The tar contains the Angular SSR server and browser bundles
+tar(
+    name = "ssr_layer",
+    srcs = [":build_ssr"],
+    # Strip the bazel output prefix and place at /app in container
+    mutate = mutate(
+        strip_prefix = "typescript/pwc-fr-iafactory-demo-mkt-bounce",
+    ),
+)
+
+# OCI image for Angular SSR server
+# Base: Distroless Node.js 22 image (minimal, secure)
+oci_image(
+    name = "image",
+    base = "@distroless_nodejs_linux_amd64",
+    tars = [":ssr_layer"],
+    # Distroless nodejs images run node automatically on /nodejs/bin/node
+    # Working directory must be the server folder for Angular to find its manifest files
+    entrypoint = ["/nodejs/bin/node"],
+    cmd = ["server.mjs"],
+    workdir = "/dist/email-bounce-frontend/server",
+    env = {
+        "NODE_ENV": "production",
+        "PORT": "4000",
+    },
+    exposed_ports = ["4200/tcp"],
+)
+
+# Load OCI image into local Docker daemon for testing
+# Use: bazel run //typescript/pwc-fr-iafactory-demo-mkt-bounce:image_load
+# Or build tarball: bazel build //typescript/pwc-fr-iafactory-demo-mkt-bounce:image_load --output_groups=tarball
+# Then: docker load < bazel-bin/typescript/pwc-fr-iafactory-demo-mkt-bounce/image_load/tarball.tar
+oci_load(
+    name = "image_load",
+    image = ":image",
+    repo_tags = ["pwc-mkt-bounce:latest"],
+)
+
+# Push OCI image to container registry
+# Use: bazel run //typescript/pwc-fr-iafactory-demo-mkt-bounce:push_image
+oci_push(
+    name = "push_image",
+    image = ":image",
+    # Default repository - override with --define or build settings
+    repository = "gcr.io/projecthub-qa/pwc-mkt-bounce",
 )
