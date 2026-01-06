@@ -1,0 +1,101 @@
+// PwC Theme Variables - Light and Dark Mode
+:root[data-theme="light"] {
+  --background-primary: #F5F5F5;
+  --background-secondary: #ffffff;
+  --text-primary: #2C2C2C;
+  --text-secondary: #6B6B6B;
+  --border-color: #E5E5E5;
+  --card-background: #ffffff;
+  --header-background: #ffffff;
+  --footer-background: #1a1a1a;
+  --input-background: #F5F5F5;
+  --hover-background: #fafafa;
+}
+
+:root[data-theme="dark"] {
+  --background-primary: #1a1a1a;
+  --background-secondary: #2c2c2c;
+  --text-primary: #f1f3f5;
+  --text-secondary: #adb5bd;
+  --border-color: #495057;
+  --card-background: #2c2c2c;
+  --header-background: #ffffff;
+  --footer-background: #1a1a1a;
+  --input-background: #333333;
+  --hover-background: #3a3a3a;
+}
+
+// PwC Brand Colors
+$pwc-orange: #e8460a;
+$pwc-orange-light: #f06b39;
+$pwc-orange-pale: #f59872;
+$peach-light: #fad0c0;
+$peach-medium: #f08b6a;
+
+// Neutral Colors
+$neutral-charcoal: #2C2C2C;
+$neutral-dark-gray: #4A4A4A;
+$neutral-medium-gray: #6B6B6B;
+$neutral-light-gray: #E5E5E5;
+$neutral-pale-gray: #F5F5F5;
+
+// Semantic Colors
+$success: #28A745;
+$warning: #FFC107;
+$error: #DC3545;
+$info: #17A2B8;
+
+// Theme Transitions
+body {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+// Keyframe Animations
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideIn {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes pulseOrange {
+  0%, 100% { box-shadow: 0 4px 12px rgba(232, 70, 10, 0.3); }
+  50% { box-shadow: 0 6px 20px rgba(232, 70, 10, 0.6); }
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+// Animation utility classes
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.animate-slide-in {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: slideIn 0.5s ease forwards;
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-orange {
+  animation: pulseOrange 2s infinite;
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}

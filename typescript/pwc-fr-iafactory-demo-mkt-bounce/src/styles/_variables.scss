@@ -1,0 +1,126 @@
+// _variables.scss - PwC Design System Tokens
+
+// ==========================================
+// COLORS - PwC Brand
+// ==========================================
+
+// Primary Colors
+$pwc-orange: #e8460a;
+$pwc-orange-light: #f06b39;
+$pwc-orange-pale: #f59872;
+
+// Complementary Colors
+$peach-light: #fad0c0;
+$peach-medium: #f08b6a;
+
+// Neutral Colors
+$neutral-charcoal: #2C2C2C;
+$neutral-dark-gray: #4A4A4A;
+$neutral-medium-gray: #6B6B6B;
+$neutral-light-gray: #E5E5E5;
+$neutral-pale-gray: #F5F5F5;
+$neutral-white: #FFFFFF;
+
+// Semantic Colors
+$color-success: #28A745;
+$color-warning: #FFC107;
+$color-error: #DC3545;
+$color-info: #17A2B8;
+
+// ==========================================
+// TYPOGRAPHY
+// ==========================================
+
+// Font Families
+$font-family-heading: Georgia, serif;
+$font-family-body: Arial, 'Helvetica Neue', sans-serif;
+
+// Font Sizes
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-base: 1rem;     // 16px
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+$font-size-3xl: 1.875rem;  // 30px
+$font-size-4xl: 2.25rem;   // 36px
+
+// Font Weights
+$font-weight-normal: 400;
+$font-weight-medium: 500;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+// Line Heights
+$line-height-tight: 1.25;
+$line-height-normal: 1.5;
+$line-height-relaxed: 1.75;
+
+// ==========================================
+// SPACING
+// ==========================================
+
+$spacing-1: 0.25rem;   // 4px
+$spacing-2: 0.5rem;    // 8px
+$spacing-3: 0.75rem;   // 12px
+$spacing-4: 1rem;      // 16px
+$spacing-5: 1.25rem;   // 20px
+$spacing-6: 1.5rem;    // 24px
+$spacing-8: 2rem;      // 32px
+$spacing-10: 2.5rem;   // 40px
+$spacing-12: 3rem;     // 48px
+$spacing-16: 4rem;     // 64px
+
+// ==========================================
+// LAYOUT
+// ==========================================
+
+$container-max-width: 1200px;
+$container-padding: $spacing-4;
+
+$header-height: 64px;
+$footer-height: 80px;
+
+// Breakpoints
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+
+// ==========================================
+// BORDERS
+// ==========================================
+
+$border-width: 1px;
+$border-width-thick: 2px;
+
+$border-radius-sm: 2px;
+$border-radius-md: 4px;
+$border-radius-lg: 8px;
+$border-radius-full: 50%;
+
+// ==========================================
+// SHADOWS
+// ==========================================
+
+$shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+$shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+$shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+$shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.15);
+
+// ==========================================
+// TRANSITIONS
+// ==========================================
+
+$transition-fast: 150ms ease-in-out;
+$transition-base: 250ms ease-in-out;
+$transition-slow: 350ms ease-in-out;
+
+// ==========================================
+// Z-INDEX
+// ==========================================
+
+$z-index-dropdown: 1000;
+$z-index-modal: 1050;
+$z-index-toast: 1100;
+$z-index-tooltip: 1200;

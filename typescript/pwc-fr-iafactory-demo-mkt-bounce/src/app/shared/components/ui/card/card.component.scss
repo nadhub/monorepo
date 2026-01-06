@@ -1,0 +1,48 @@
+// card.component.scss - Card Styles
+
+@use 'mixins' as *;
+
+.card {
+  @include card-base;
+  transition: box-shadow $transition-base, transform $transition-base;
+
+  &__header {
+    @include flex-between;
+    margin-bottom: $spacing-4;
+    padding-bottom: $spacing-4;
+    border-bottom: $border-width solid var(--border-color);
+  }
+
+  &__title {
+    @include heading-base;
+    font-size: $font-size-xl;
+    margin: 0;
+  }
+
+  &__body {
+    // Body content
+  }
+
+  // Variants
+  &--primary {
+    border-color: $pwc-orange;
+  }
+
+  &--success {
+    border-color: $color-success;
+  }
+
+  &--warning {
+    border-color: $color-warning;
+  }
+
+  // Hoverable state
+  &--hoverable {
+    cursor: pointer;
+
+    &:hover {
+      box-shadow: $shadow-lg;
+      transform: translateY(-2px);
+    }
+  }
+}

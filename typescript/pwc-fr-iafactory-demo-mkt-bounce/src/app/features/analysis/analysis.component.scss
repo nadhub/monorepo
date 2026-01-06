@@ -1,0 +1,803 @@
+@use 'variables' as *;
+
+// Error Message Styles - Style discret conforme à la charte PwC
+.error-message {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 3rem 1rem 1rem;
+  background: #fef2f2; // Fond rose très pâle
+  border-left: 4px solid #DC3545; // Bordure rouge à gauche (couleur Error PwC)
+  border-radius: 4px;
+  margin-bottom: 1.5rem;
+  animation: slideUp 0.3s;
+
+  .error-icon {
+    flex-shrink: 0;
+    width: 24px;
+    height: 24px;
+    color: #DC3545; // Rouge PwC
+    font-size: 1.25rem;
+    line-height: 1;
+  }
+
+  .error-content {
+    flex: 1;
+    color: #991b1b; // Rouge foncé pour le texte
+
+    h4 {
+      margin: 0 0 0.5rem 0;
+      font-size: 0.9375rem; // ~15px
+      font-weight: 600;
+      color: #DC3545;
+      font-family: Arial, 'Helvetica Neue', sans-serif;
+    }
+
+    p {
+      margin: 0.25rem 0;
+      line-height: 1.5;
+      font-family: Arial, 'Helvetica Neue', sans-serif;
+      font-size: 0.875rem;
+      color: #7f1d1d; // Rouge très foncé
+    }
+
+    .error-hint {
+      margin-top: 0.75rem;
+      padding: 0.5rem 0.75rem;
+      background: rgba(220, 53, 69, 0.05);
+      border-radius: 4px;
+      font-size: 0.8125rem;
+
+      strong {
+        color: #DC3545;
+        font-weight: 600;
+      }
+    }
+  }
+
+  .error-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: none;
+    border: none;
+    color: #DC3545;
+    font-size: 1.25rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.6;
+    transition: opacity 0.2s;
+
+    &:hover {
+      opacity: 1;
+    }
+  }
+}
+
+@keyframes slideUp {
+  0% { transform: translateY(10px); opacity: 0; }
+  100% { transform: translateY(0); opacity: 1; }
+}
+
+// Timeline Container
+.timeline-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem;
+}
+
+// Documentation Cards Grid
+.doc-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+}
+
+.doc-card {
+  background: var(--card-background);
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+}
+
+.card-orange {
+  border-top: 4px solid $pwc-orange;
+}
+
+.card-green {
+  border-top: 4px solid $pwc-orange;
+}
+
+.card-blue {
+  border-top: 4px solid $pwc-orange;
+}
+
+.doc-card-title {
+  font-family: $font-family-heading;
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  
+  span {
+    display: flex;
+    align-items: center;
+  }
+  
+  .card-orange &,
+  .card-green &,
+  .card-blue & {
+    color: $pwc-orange;
+    
+    :deep(svg) {
+      color: $pwc-orange;
+    }
+  }
+}
+
+.doc-card-text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+.doc-card-list {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0;
+  padding-left: 1.25rem;
+  
+  strong {
+    color: var(--text-primary);
+  }
+}
+
+.classification-list {
+  list-style: none;
+  padding-left: 0;
+  
+  li {
+    margin-bottom: 0.5rem;
+    
+    strong {
+      font-weight: 600;
+    }
+  }
+}
+
+// Campaign Brief
+.campaign-brief {
+  margin-bottom: 1.5rem;
+}
+
+.campaign-title {
+  font-family: $font-family-heading;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+}
+
+.campaign-description {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+// Action Section
+.action-section {
+  background: var(--card-background);
+  border-radius: 8px;
+  padding: 3rem 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  border: 2px solid var(--border-color);
+}
+
+.action-title {
+  font-family: $font-family-heading;
+  font-size: 1.875rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  
+  span {
+    display: flex;
+    align-items: center;
+    
+    :deep(svg) {
+      color: $pwc-orange;
+    }
+  }
+}
+
+.action-description {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-size: 1rem;
+}
+
+// Loading Card
+.loading-card {
+  margin-bottom: 1.5rem;
+}
+
+.loading-title {
+  font-family: $font-family-heading;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  
+  span {
+    display: flex;
+    align-items: center;
+    
+    :deep(svg) {
+      color: $pwc-orange;
+    }
+  }
+}
+
+.email-sending-list {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.email-item {
+  padding: 1rem;
+  background: var(--input-background);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  transition: all 0.4s;
+  opacity: 0.3;
+  
+  &.sending {
+    opacity: 1;
+    background: var(--card-background);
+    border-color: $pwc-orange;
+  }
+  
+  &.sent {
+    opacity: 1;
+    background: var(--card-background);
+    border-color: $color-success;
+  }
+}
+
+.email-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 0.5rem;
+}
+
+.email-item-addresses {
+  flex: 1;
+}
+
+.email-address-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+  margin-bottom: 0.25rem;
+}
+
+.email-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.email-value-small {
+  font-size: 0.75rem;
+  color: var(--text-primary);
+  font-family: 'Courier New', monospace;
+}
+
+.email-status {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  padding: 0.25rem 0.75rem;
+  background: var(--border-color);
+  border-radius: 12px;
+  transition: all 0.3s;
+  
+  &.sending {
+    background: linear-gradient(135deg, $pwc-orange 0%, $pwc-orange-light 100%);
+    color: white;
+  }
+  
+  &.sent {
+    background: $color-success;
+    color: white;
+  }
+}
+
+.email-subject {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  margin-bottom: 0.25rem;
+}
+
+.email-preview-text {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.4;
+}
+
+// Notifications
+.notification-success {
+  border-left: 4px solid $color-success;
+  margin-bottom: 1.5rem;
+}
+
+.notification-warning {
+  border-left: 4px solid $pwc-orange;
+  margin-bottom: 1.5rem;
+}
+
+.notification-title {
+  font-family: $font-family-heading;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  
+  span {
+    display: flex;
+    align-items: center;
+    
+    :deep(svg) {
+      flex-shrink: 0;
+    }
+  }
+  
+  .notification-success & {
+    :deep(svg) {
+      color: $color-success;
+    }
+  }
+  
+  .notification-warning & {
+    :deep(svg) {
+      color: $pwc-orange;
+    }
+  }
+}
+
+.notification-text {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+// Stats Dashboard
+.stats-dashboard {
+  background: var(--card-background);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.dashboard-title {
+  font-family: $font-family-heading;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  
+  span {
+    display: flex;
+    align-items: center;
+    
+    :deep(svg) {
+      color: $pwc-orange;
+    }
+  }
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+}
+
+// Bounce Container
+.bounce-container {
+  background: var(--card-background);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.bounce-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.bounce-title {
+  font-family: $font-family-heading;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  
+  span {
+    display: flex;
+    align-items: center;
+    
+    :deep(svg) {
+      color: $pwc-orange;
+    }
+  }
+}
+
+.bounce-count {
+  background: $pwc-orange;
+  color: white;
+  padding: 0.5rem 1.25rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-size: 1rem;
+}
+
+.bounce-instruction {
+  color: var(--text-secondary);
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  
+  strong {
+    color: var(--text-primary);
+  }
+}
+
+.bounce-list {
+  display: grid;
+  gap: 1rem;
+}
+
+.bounce-item {
+  background: var(--input-background);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1.5rem;
+  cursor: pointer;
+  transition: all 0.25s;
+  display: grid;
+  grid-template-columns: 60px 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  
+  &:hover {
+    border-color: $pwc-orange;
+    box-shadow: 0 4px 6px rgba(232, 70, 10, 0.15);
+    transform: translateX(5px);
+  }
+  
+  &.analyzed {
+    background: rgba(40, 167, 69, 0.1);
+    border-color: $color-success;
+  }
+}
+
+.bounce-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, $pwc-orange 0%, $pwc-orange-light 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  color: white;
+  box-shadow: 0 4px 6px rgba(232, 70, 10, 0.3);
+  
+  :deep(svg) {
+    width: 30px;
+    height: 30px;
+    color: white;
+    stroke-width: 2.5;
+  }
+}
+
+.bounce-info {
+  flex: 1;
+}
+
+.bounce-sender {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+}
+
+.bounce-preview {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+// Analysis Section
+.analysis-section {
+  background: var(--card-background);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 1.5rem;
+}
+
+.loading-section {
+  background: var(--card-background);
+  border-radius: 8px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.loading-spinner {
+  width: 80px;
+  height: 80px;
+  border: 6px solid var(--border-color);
+  border-top-color: $pwc-orange;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1.5rem;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+.loading-text {
+  font-size: 1.125rem;
+  color: var(--text-secondary);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.email-meta {
+  display: grid;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 0.875rem;
+  
+  strong {
+    color: $pwc-orange;
+    font-weight: 600;
+  }
+}
+
+.email-content {
+  background: var(--input-background);
+  padding: 1.5rem;
+  border-radius: 4px;
+  min-height: 150px;
+  max-height: 250px;
+  overflow-y: auto;
+  font-size: 0.875rem;
+  color: var(--text-primary);
+  line-height: 1.7;
+  border: 1px solid var(--border-color);
+  white-space: pre-wrap;
+}
+
+.email-display {
+  background: var(--input-background);
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 2px solid var(--border-color);
+}
+
+// Results Section
+.results-section {
+  background: var(--card-background);
+  border-radius: 8px;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.results-header {
+  background: linear-gradient(135deg, $pwc-orange 0%, $pwc-orange-light 100%);
+  padding: 1rem 2rem;
+  text-align: center;
+  
+  h3 {
+    font-family: $font-family-heading;
+    font-size: 1.875rem;
+    font-weight: 700;
+    color: white;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    
+    span {
+      display: flex;
+      align-items: center;
+      
+      :deep(svg) {
+        color: white;
+      }
+    }
+  }
+}
+
+.results-body {
+  padding: 2rem;
+}
+
+.classification-display {
+  margin-bottom: 1.5rem;
+  background: var(--input-background);
+  border: 2px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.classification-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.explanation-content {
+  padding: 0.75rem;
+  background: var(--input-background);
+  border-left: 4px solid $pwc-orange;
+  border-radius: 4px;
+  line-height: 1.7;
+  color: var(--text-primary);
+  font-size: 0.875rem;
+}
+
+.email-value {
+  font-family: 'Courier New', Courier, monospace;
+  color: $pwc-orange;
+  font-weight: 600;
+  background: var(--input-background);
+  padding: 0.5rem 0.75rem;
+  border-radius: 4px;
+  font-size: 0.875rem;
+}
+
+.success-message {
+  background: var(--card-background);
+  color: var(--text-primary);
+  padding: 3rem 2rem;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 2rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 2px solid $pwc-orange;
+  
+  h3 {
+    font-family: $font-family-heading;
+    font-size: 2.25rem;
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: $pwc-orange;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    
+    span {
+      display: flex;
+      align-items: center;
+      
+      :deep(svg) {
+        color: $pwc-orange;
+      }
+    }
+  }
+  
+  p {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    
+    strong {
+      color: $pwc-orange;
+      font-weight: 600;
+    }
+  }
+}
+
+.text-orange {
+  color: $pwc-orange;
+}
+
+.card {
+  background: var(--card-background);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .doc-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .bounce-item {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+}

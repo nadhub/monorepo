@@ -1,0 +1,27 @@
+﻿@if (type === 'spinner') {
+  <div class="loading-spinner" [class]="'loading-spinner--' + size">
+    <div class="loading-spinner__circle"></div>
+    @if (message) {
+      <p class="loading-spinner__message">{{ message }}</p>
+    }
+  </div>
+}
+
+@if (type === 'overlay') {
+  <div class="loading-overlay">
+    <div class="loading-spinner loading-spinner--lg">
+      <div class="loading-spinner__circle"></div>
+      @if (message) {
+        <p class="loading-spinner__message">{{ message }}</p>
+      }
+    </div>
+  </div>
+}
+
+@if (type === 'skeleton') {
+  <div class="loading-skeleton">
+    <div class="loading-skeleton__line"></div>
+    <div class="loading-skeleton__line"></div>
+    <div class="loading-skeleton__line loading-skeleton__line--short"></div>
+  </div>
+}

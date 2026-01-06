@@ -1,0 +1,252 @@
+<div class="timeline-container">
+  
+  <!-- Quick Documentation Cards -->
+  <div class="doc-cards-grid">
+    <!-- Card 1: What is this tool? -->
+    <div class="doc-card card-orange">
+      <h3 class="doc-card-title">
+        <span [innerHTML]="getIcon('info')"></span>
+        {{ translationService.translate('doc_card1_title') }}
+      </h3>
+      <p class="doc-card-text">
+        {{ translationService.translate('doc_card1_text') }}
+      </p>
+    </div>
+
+    <!-- Card 2: How to use -->
+    <div class="doc-card card-green">
+      <h3 class="doc-card-title">
+        <span [innerHTML]="getIcon('search')"></span>
+        {{ translationService.translate('doc_card2_title') }}
+      </h3>
+      <ol class="doc-card-list">
+        <li><strong>{{ translationService.translate('doc_card2_step1_bold') }}</strong> {{ translationService.translate('doc_card2_step1_text') }}</li>
+        <li><strong>{{ translationService.translate('doc_card2_step2_bold') }}</strong> {{ translationService.translate('doc_card2_step2_text') }}</li>
+        <li><strong>{{ translationService.translate('doc_card2_step3_bold') }}</strong> {{ translationService.translate('doc_card2_step3_text') }}</li>
+      </ol>
+    </div>
+
+    <!-- Card 3: Classifications -->
+    <div class="doc-card card-blue">
+      <h3 class="doc-card-title">
+        <span [innerHTML]="getIcon('file')"></span>
+        {{ translationService.translate('doc_card3_title') }}
+      </h3>
+      <ul class="doc-card-list classification-list">
+        <li><strong>{{ translationService.translate('doc_card3_class1_name') }}</strong> {{ translationService.translate('doc_card3_class1_desc') }}</li>
+        <li><strong>{{ translationService.translate('doc_card3_class2_name') }}</strong> {{ translationService.translate('doc_card3_class2_desc') }}</li>
+        <li><strong>{{ translationService.translate('doc_card3_class3_name') }}</strong> {{ translationService.translate('doc_card3_class3_desc') }}</li>
+        <li><strong>{{ translationService.translate('doc_card3_class4_name') }}</strong> {{ translationService.translate('doc_card3_class4_desc') }}</li>
+        <li><strong>{{ translationService.translate('doc_card3_class5_name') }}</strong> {{ translationService.translate('doc_card3_class5_desc') }}</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- Campaign Brief -->
+  <div class="card campaign-brief">
+    <h2 class="campaign-title">{{ translationService.translate('campaign_title') }}</h2>
+    <p class="campaign-description">
+      {{ translationService.translate('campaign_desc') }}
+      <strong class="text-orange">5,000 {{ translationService.translate('campaign_desc_key') }}</strong>
+      {{ translationService.translate('campaign_desc2') }}
+    </p>
+  </div>
+
+  <!-- Action Section: Launch Campaign -->
+  @if (showLaunchSection()) {
+    <div class="action-section">
+      <div class="action-title">
+        <span [innerHTML]="getIcon('send')"></span>
+        {{ translationService.translate('action_title') }}
+      </div>
+      <p class="action-description">{{ translationService.translate('action_description') }}</p>
+      <button class="btn-campaign" (click)="launchCampaign()">
+        <span [innerHTML]="getIcon('send')"></span>
+        <span>{{ translationService.translate('launch_button') }}</span>
+      </button>
+    </div>
+  }
+
+  <!-- Loading Section -->
+  @if (showLoadingSection()) {
+    <div class="card loading-card">
+      <h3 class="loading-title">
+        <span [innerHTML]="getIcon('mail')"></span>
+        {{ translationService.translate('loading_title') }}
+      </h3>
+      <div class="email-sending-list" #emailListContainer>
+        <!-- Emails will be populated dynamically with animations -->
+      </div>
+    </div>
+  }
+
+  <!-- Notification 2: Campaign Sent -->
+  @if (showNotif2()) {
+    <div class="card notification-success">
+      <h3 class="notification-title">
+        <span [innerHTML]="getIcon('send')"></span>
+        {{ translationService.translate('notif2_title') }}
+      </h3>
+      <p class="notification-text">{{ translationService.translate('notif2_text') }}</p>
+    </div>
+  }
+
+  <!-- Stats Dashboard -->
+  @if (showStatsSection()) {
+    <div class="stats-dashboard">
+      <div class="dashboard-title">
+        <span [innerHTML]="getIcon('file')"></span>
+        {{ translationService.translate('stats_title') }}
+      </div>
+      <div class="stats-grid">
+        <app-stat-card [value]="10" [label]="translationService.translate('stat_sent')" />
+        <app-stat-card [value]="7" [label]="translationService.translate('stat_delivered')" />
+        <app-stat-card [value]="5" [label]="translationService.translate('stat_bounces')" />
+        <app-stat-card [value]="'70%'" [label]="translationService.translate('stat_success')" />
+      </div>
+    </div>
+  }
+
+  <!-- Notification 3: Bounces Detected -->
+  @if (showNotif3()) {
+    <div class="card notification-warning">
+      <h3 class="notification-title">
+        <span [innerHTML]="getIcon('info')"></span>
+        {{ translationService.translate('notif3_title') }}
+      </h3>
+      <p class="notification-text">
+        <strong class="text-orange">{{ translationService.translate('notif3_count') }}</strong>
+        {{ translationService.translate('notif3_text') }}
+      </p>
+    </div>
+  }
+
+  <!-- Bounce Container -->
+  @if (showBounceSection()) {
+    <div class="bounce-container">
+      <div class="bounce-header">
+        <div class="bounce-title">
+          <span [innerHTML]="getIcon('mail')"></span>
+          {{ translationService.translate('bounce_title') }}
+        </div>
+        <div class="bounce-count">{{ totalBounces() - analyzedCount() }}</div>
+      </div>
+      <p class="bounce-instruction">
+        <strong>{{ translationService.translate('bounce_inst_bold') }}</strong>
+        {{ translationService.translate('bounce_inst_text') }}
+      </p>
+      <div class="bounce-list">
+        @for (email of bounceEmails; track email.id) {
+          <div class="bounce-item" (click)="analyzeEmail(email)" [class.analyzed]="isEmailAnalyzed(email.id)">
+            <div class="bounce-avatar" [innerHTML]="getIcon(email.icon)"></div>
+            <div class="bounce-info">
+              <div class="bounce-sender">{{ email.sender }}</div>
+              <div class="bounce-preview">{{ email.preview }}</div>
+            </div>
+            <app-badge [variant]="getBadgeVariant(email.badgeClass)">{{ email.type }}</app-badge>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Analysis Section -->
+  @if (showAnalysisSection()) {
+    <div class="analysis-section">
+      <div class="email-display">
+        <div class="email-meta">
+          <div><strong>{{ translationService.translate('email_from') }}</strong> {{ currentEmailSender() }}</div>
+          <div><strong>{{ translationService.translate('email_bounce_type') }}</strong> {{ currentEmailType() }}</div>
+          <div><strong>{{ translationService.translate('email_time') }}</strong> 09:30 AM</div>
+        </div>
+        <div class="email-content">{{ currentEmailBody() }}</div>
+      </div>
+      
+      @if (showAiLoading()) {
+        <div class="loading-section">
+          <div class="loading-spinner"></div>
+          <div class="loading-text">{{ translationService.translate('ai_loading') }}</div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Results Section -->
+  @if (showResultsSection()) {
+    <div class="results-section">
+      <div class="results-header">
+        <h3>
+          <span [innerHTML]="getIcon('file')"></span>
+          {{ translationService.translate('results_title') }}
+        </h3>
+      </div>
+      <div class="results-body">
+        @if (analysisError()) {
+          <div class="error-message">
+            <div class="error-icon">
+              <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="error-content">
+              <h4>{{ translationService.translate('error.title') }}</h4>
+              <p>{{ analysisError() }}</p>
+            </div>
+            <button class="error-close" (click)="analysisError.set(null)" [attr.aria-label]="translationService.translate('error.close')">×</button>
+          </div>
+        }
+        @if (currentClassification()) {
+          <div class="classification-display">
+            <span class="classification-label">{{ translationService.translate('classification_label') }}</span>
+            <app-badge [variant]="'employee-departure'">{{ currentClassification() }}</app-badge>
+          </div>
+        }
+        
+        <div class="table-container">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>{{ translationService.translate('table_action') }}</th>
+                <th>{{ translationService.translate('table_email') }}</th>
+                <th>{{ translationService.translate('table_name') }}</th>
+                <th>{{ translationService.translate('table_job') }}</th>
+                <th>{{ translationService.translate('table_phone') }}</th>
+                <th>{{ translationService.translate('table_org') }}</th>
+                <th>{{ translationService.translate('table_explanation') }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of currentResults(); track item.email) {
+                <tr class="animate-fade-in">
+                  <td><app-badge [variant]="getBadgeVariant(item.actionClass)">{{ item.action }}</app-badge></td>
+                  <td><span class="email-value">{{ item.email }}</span></td>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.job }}</td>
+                  <td>{{ item.phone }}</td>
+                  <td>{{ item.org }}</td>
+                  <td><div class="explanation-content">{{ item.explanation }}</div></td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Success Message -->
+  @if (showSuccessMessage()) {
+    <div class="success-message">
+      <h3>
+        <span [innerHTML]="getIcon('bookmark')"></span>
+        {{ translationService.translate('success_title') }}
+      </h3>
+      <p>
+        {{ translationService.translate('success_text1') }}
+        <strong>{{ translationService.translate('success_text2') }}</strong>
+        {{ translationService.translate('success_text3') }}
+      </p>
+    </div>
+  }
+
+</div>

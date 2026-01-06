@@ -1,0 +1,75 @@
+@use 'mixins' as *;
+
+.table-container {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  &__header {
+    background: var(--background-secondary);
+  }
+
+  &__row {
+    border-bottom: $border-width solid var(--border-color);
+
+    &--clickable {
+      cursor: pointer;
+      transition: background-color $transition-fast;
+
+      &:hover {
+        background: var(--background-secondary);
+      }
+    }
+  }
+
+  &__cell {
+    padding: $spacing-3 $spacing-4;
+    text-align: left;
+    color: var(--text-primary);
+
+    &--header {
+      font-weight: $font-weight-semibold;
+      font-size: $font-size-sm;
+      text-transform: uppercase;
+    }
+
+    &--sortable {
+      cursor: pointer;
+      user-select: none;
+
+      &:hover {
+        color: $pwc-orange;
+      }
+    }
+  }
+
+  &__sort-icon {
+    margin-left: $spacing-2;
+  }
+
+  &__pagination {
+    @include flex-between;
+    margin-top: $spacing-4;
+    padding: $spacing-4;
+  }
+
+  &__pagination-btn {
+    @include button-base;
+    background: var(--button-primary-bg);
+    color: var(--button-primary-text);
+    padding: $spacing-2 $spacing-4;
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__pagination-info {
+    color: var(--text-secondary);
+    font-size: $font-size-sm;
+  }
+}

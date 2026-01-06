@@ -1,0 +1,76 @@
+// styles.scss - Global Application Styles
+
+@use 'styles/variables' as *;
+@use 'styles/mixins' as *;
+@use 'styles/themes';
+@use 'styles/typography';
+@use 'styles/layout';
+@use 'styles/components';
+
+// Reset & Base
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  @include body-text;
+  background: var(--background-primary);
+  color: var(--text-primary);
+  min-height: 100vh;
+  
+  &.theme-transition {
+    @extend .theme-transition;
+  }
+}
+
+// Links
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: color $transition-fast;
+  
+  &:hover {
+    color: var(--link-hover);
+  }
+  
+  @include focus-visible;
+}
+
+// Buttons
+button {
+  font-family: inherit;
+}
+
+// Inputs
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+// Scrollbar (webkit)
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-secondary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: $border-radius-md;
+  
+  &:hover {
+    background: var(--border-color-hover);
+  }
+}

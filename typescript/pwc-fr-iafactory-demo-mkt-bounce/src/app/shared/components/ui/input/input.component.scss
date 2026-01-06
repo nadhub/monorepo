@@ -1,0 +1,38 @@
+@use 'mixins' as *;
+
+.form-group {
+  margin-bottom: $spacing-4;
+}
+
+.form-label {
+  display: block;
+  margin-bottom: $spacing-2;
+  font-weight: $font-weight-medium;
+  color: var(--text-primary);
+  font-size: $font-size-sm;
+
+  &__required {
+    color: $color-error;
+    margin-left: $spacing-1;
+  }
+}
+
+.form-input {
+  @include input-base;
+
+  &--error {
+    border-color: $color-error;
+  }
+}
+
+.form-help-text {
+  margin-top: $spacing-2;
+  font-size: $font-size-sm;
+  color: var(--text-tertiary);
+}
+
+.form-error {
+  margin-top: $spacing-2;
+  font-size: $font-size-sm;
+  color: $color-error;
+}

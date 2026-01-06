@@ -1,0 +1,14 @@
+<div [class]="cardClasses()">
+  @if (title) {
+    <div class="card__header">
+      <h3 class="card__title">{{ title }}</h3>
+      <ng-content select="[slot=header-actions]"></ng-content>
+    </div>
+  }
+  
+  <div class="card__body">
+    <ng-content></ng-content>
+  </div>
+  
+  <ng-content select="[slot=footer]"></ng-content>
+</div>

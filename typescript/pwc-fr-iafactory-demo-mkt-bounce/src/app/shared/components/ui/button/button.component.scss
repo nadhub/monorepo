@@ -1,0 +1,157 @@
+// button.component.scss - Button Styles
+
+@use 'mixins' as *;
+
+.btn {
+  @include button-base;
+  @include focus-visible;
+
+  // Primary variant (PwC Orange)
+  &--primary {
+    background: $pwc-orange;
+    color: $neutral-white;
+    border: 2px solid $pwc-orange;
+    border-radius: $border-radius-md;
+    font-weight: $font-weight-semibold;
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    transition: all $transition-base;
+    box-shadow: 0 2px 4px rgba(232, 70, 10, 0.2);
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover:not(:disabled) {
+      background: $pwc-orange-light;
+      border-color: $pwc-orange-light;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(232, 70, 10, 0.35);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 2px 4px rgba(232, 70, 10, 0.2);
+    }
+  }
+
+  // Secondary variant (White with border)
+  &--secondary {
+    background: $neutral-white;
+    color: $neutral-charcoal;
+    border: 2px solid $neutral-light-gray;
+    border-radius: $border-radius-md;
+    font-weight: $font-weight-semibold;
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    transition: all $transition-base;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    &:hover:not(:disabled) {
+      background: $neutral-pale-gray;
+      border-color: $neutral-medium-gray;
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.12);
+    }
+
+    &:active:not(:disabled) {
+      transform: translateY(0);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    }
+  }
+
+  // Outline variant
+  &--outline {
+    background: transparent;
+    color: var(--button-primary-bg);
+    border: $border-width-thick solid var(--button-primary-bg);
+
+    &:hover:not(:disabled) {
+      background: var(--button-primary-bg);
+      color: var(--button-primary-text);
+    }
+  }
+
+  // Export variant (Orange with icon)
+  &--export {
+    background: $pwc-orange;
+    color: $neutral-white;
+    border: 2px solid $pwc-orange;
+    border-radius: $border-radius-lg;
+    font-weight: $font-weight-semibold;
+    display: inline-flex;
+    align-items: center;
+    gap: $spacing-2;
+    transition: all $transition-base;
+
+    &:hover:not(:disabled) {
+      background: $pwc-orange-light;
+      border-color: $pwc-orange-light;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(232, 70, 10, 0.3);
+    }
+
+    .btn-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: $font-size-lg;
+    }
+  }
+
+  // Size variants
+  &--sm {
+    padding: $spacing-2 $spacing-4;
+    font-size: $font-size-sm;
+  }
+
+  &--md {
+    padding: $spacing-3 $spacing-6;
+    font-size: $font-size-base;
+  }
+
+  &--lg {
+    padding: $spacing-4 $spacing-8;
+    font-size: $font-size-lg;
+  }
+
+  // States
+  &--disabled,
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &--loading {
+    position: relative;
+    color: transparent;
+  }
+}
+
+// Loading spinner
+.btn__spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: translate(-50%, -50%) rotate(360deg);
+  }
+}

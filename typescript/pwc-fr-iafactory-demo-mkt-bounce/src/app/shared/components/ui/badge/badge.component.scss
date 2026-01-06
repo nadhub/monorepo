@@ -1,0 +1,48 @@
+@use 'sass:color';
+@use 'variables' as *;
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-md;
+  font-weight: $font-weight-semibold;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  &--sm {
+    padding: $spacing-1 $spacing-2;
+    font-size: $font-size-xs;
+  }
+
+  &--md {
+    padding: $spacing-2 $spacing-3;
+    font-size: $font-size-sm;
+  }
+
+  &--success {
+    background: color.scale($color-success, $lightness: 67.33%);
+    color: color.scale($color-success, $lightness: -24.64%);
+  }
+
+  &--warning {
+    background: color.scale($color-warning, $lightness: 71.98%);
+    color: color.scale($color-warning, $lightness: -58.4%);
+  }
+
+  &--error {
+    background: color.scale($color-error, $lightness: 75.32%);
+    color: color.scale($color-error, $lightness: -24.64%);
+  }
+
+  &--info {
+    background: color.scale($color-info, $lightness: 67.33%);
+    color: color.scale($color-info, $lightness: -24.64%);
+  }
+
+  &--neutral {
+    background: var(--background-tertiary);
+    color: var(--text-primary);
+  }
+}

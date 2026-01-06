@@ -1,0 +1,54 @@
+﻿<div class="table-container">
+  <table class="table">
+    <thead class="table__header">
+      <tr class="table__row">
+        @for (column of columns; track column.key) {
+          <th 
+            class="table__cell table__cell--header"
+            [class.table__cell--sortable]="column.sortable && sortable"
+            (click)="onSort(column)">
+            {{ column.label }}
+            @if (column.sortable && sortable && sortColumn() === column.key) {
+              <span class="table__sort-icon">
+                {{ sortDirection() === 'asc' ? 'â†‘' : 'â†“' }}
+              </span>
+            }
+          </th>
+        }
+      </tr>
+    </thead>
+    <tbody class="table__body">
+      @for (row of paginatedData(); track row) {
+        <tr 
+          class="table__row table__row--clickable"
+          (click)="onRowClick(row)">
+          @for (column of columns; track column.key) {
+            <td class="table__cell">
+              {{ row[column.key] }}
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  @if (paginated && totalPages() > 1) {
+    <div class="table__pagination">
+      <button 
+        class="table__pagination-btn"
+        [disabled]="currentPage() === 0"
+        (click)="prevPage()">
+        Previous
+      </button>
+      <span class="table__pagination-info">
+        Page {{ currentPage() + 1 }} of {{ totalPages() }}
+      </span>
+      <button 
+        class="table__pagination-btn"
+        [disabled]="currentPage() === totalPages() - 1"
+        (click)="nextPage()">
+        Next
+      </button>
+    </div>
+  }
+</div>

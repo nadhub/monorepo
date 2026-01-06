@@ -1,0 +1,30 @@
+<div class="form-group">
+  @if (label) {
+    <label [for]="inputId" class="form-label">
+      {{ label }}
+      @if (required) {
+        <span class="form-label__required">*</span>
+      }
+    </label>
+  }
+  
+  <input
+    [id]="inputId"
+    [type]="type"
+    [class]="inputClasses()"
+    [placeholder]="placeholder"
+    [disabled]="disabled()"
+    [required]="required"
+    [value]="value()"
+    (input)="onInput($event)"
+    (blur)="onBlur()"
+  />
+  
+  @if (helpText && !error()) {
+    <div class="form-help-text">{{ helpText }}</div>
+  }
+  
+  @if (error()) {
+    <div class="form-error">{{ error() }}</div>
+  }
+</div>

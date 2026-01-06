@@ -1,0 +1,1836 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Bounce Analysis - Demo Interactive</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+        }
+
+        /* Theme Transition */
+        body {
+            font-family: Arial, 'Helvetica Neue', sans-serif;
+            background: var(--background-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* CSS Variables for Theme */
+        :root[data-theme="light"] {
+            --background-primary: #F5F5F5;
+            --background-secondary: #ffffff;
+            --text-primary: #2C2C2C;
+            --text-secondary: #6B6B6B;
+            --border-color: #E5E5E5;
+            --card-background: #ffffff;
+            --header-background: #ffffff;
+            --footer-background: #1a1a1a;
+            --input-background: #F5F5F5;
+            --hover-background: #fafafa;
+        }
+
+        :root[data-theme="dark"] {
+            --background-primary: #1a1a1a;
+            --background-secondary: #2c2c2c;
+            --text-primary: #f1f3f5;
+            --text-secondary: #adb5bd;
+            --border-color: #495057;
+            --card-background: #2c2c2c;
+            --header-background: #ffffff;
+            --footer-background: #1a1a1a;
+            --input-background: #333333;
+            --hover-background: #3a3a3a;
+        }
+
+        /* Page Header - PwC Charter Compliant */
+        .page-header {
+            background: var(--header-background);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .page-header__container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 64px;
+            padding: 0 1.5rem;
+        }
+
+        .page-header__logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            text-decoration: none;
+        }
+
+        .page-header__logo-svg {
+            height: 40px;
+            width: 40px;
+        }
+
+        .page-header__app-name {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #2C2C2C;
+        }
+
+        /* Theme Switcher in Header */
+        .theme-switcher {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toggle {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 30px;
+        }
+
+        .toggle-input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5px;
+        }
+
+        .toggle-input:checked + .toggle-slider {
+            background-color: #e8460a;
+        }
+
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        .toggle-input:checked + .toggle-slider::before {
+            transform: translateX(30px);
+        }
+
+        .toggle-icon {
+            font-size: 16px;
+            z-index: 1;
+            transition: opacity 0.3s;
+        }
+
+        .toggle-icon-on {
+            opacity: 0;
+        }
+
+        .toggle-icon-off {
+            opacity: 1;
+        }
+
+        .toggle-input:checked + .toggle-slider .toggle-icon-on {
+            opacity: 1;
+        }
+
+        .toggle-input:checked + .toggle-slider .toggle-icon-off {
+            opacity: 0;
+        }
+
+        /* Hero Section with Character */
+        .story-hero {
+            background: linear-gradient(135deg, #2C2C2C 0%, #4A4A4A 100%);
+            color: white;
+            padding: 3rem 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .story-hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(232, 70, 10, 0.05) 10px,
+                rgba(232, 70, 10, 0.05) 20px
+            );
+        }
+
+        .story-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 200px;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .story-text h1 {
+            font-family: Georgia, serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            color: #e8460a;
+        }
+
+        .story-date {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.8);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .story-text p {
+            font-size: 1.125rem;
+            color: rgba(255,255,255,0.95);
+            line-height: 1.6;
+        }
+
+        .character-avatar {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e8460a 0%, #f06b39 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            box-shadow: 0 10px 15px rgba(232, 70, 10, 0.4);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .character-info {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .character-name {
+            font-weight: 700;
+            font-size: 1.125rem;
+            color: white;
+        }
+
+        .character-role {
+            font-size: 0.875rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        /* Timeline Container */
+        .timeline-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Notification Cards */
+        .notification {
+            background: var(--card-background);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            border-left: 4px solid #e8460a;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: slideIn 0.5s ease forwards;
+        }
+
+        @keyframes slideIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .notification-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #e8460a 0%, #f06b39 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            box-shadow: 0 4px 6px rgba(232, 70, 10, 0.3);
+        }
+
+        .notification-meta {
+            flex: 1;
+        }
+
+        .notification-time {
+            font-size: 0.75rem;
+            color: #6B6B6B;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            font-weight: 600;
+        }
+
+        .notification-title {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            font-family: Georgia, serif;
+        }
+
+        .notification-content {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 1rem;
+        }
+
+        .notification-content strong {
+            color: #e8460a;
+            font-weight: 600;
+        }
+
+        .thought-bubble {
+            background: var(--input-background);
+            border-radius: 8px;
+            padding: 1rem 1rem 1rem 3rem;
+            margin-top: 1rem;
+            position: relative;
+            font-style: italic;
+            color: var(--text-secondary);
+            border: 2px solid var(--border-color);
+        }
+
+        .thought-bubble::before {
+            content: '💭';
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1.5rem;
+        }
+
+        /* Action Section */
+        .action-section {
+            background: var(--card-background);
+            border-radius: 8px;
+            padding: 3rem 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+            text-align: center;
+            border: 2px solid var(--border-color);
+        }
+
+        .action-title {
+            font-family: Georgia, serif;
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .action-description {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 1rem;
+        }
+
+        .btn-campaign {
+            padding: 1rem 3rem;
+            background: linear-gradient(135deg, #e8460a 0%, #f06b39 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 4px 12px rgba(232, 70, 10, 0.3);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: pulseOrange 2s infinite;
+        }
+
+        @keyframes pulseOrange {
+            0%, 100% { box-shadow: 0 4px 12px rgba(232, 70, 10, 0.3); }
+            50% { box-shadow: 0 6px 20px rgba(232, 70, 10, 0.6); }
+        }
+
+        .btn-campaign:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(232, 70, 10, 0.5);
+        }
+
+        .btn-campaign:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            animation: none;
+        }
+
+        /* Loading Section */
+        .loading-section {
+            background: var(--card-background);
+            border-radius: 8px;
+            padding: 3rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .loading-spinner {
+            width: 80px;
+            height: 80px;
+            border: 6px solid var(--border-color);
+            border-top-color: #e8460a;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 1.125rem;
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .loading-progress {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #e8460a;
+            font-family: Georgia, serif;
+        }
+
+        /* Stats Dashboard */
+        .stats-dashboard {
+            background: var(--card-background);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .dashboard-title {
+            font-family: Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .stat-card {
+            background: var(--input-background);
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+            border: 2px solid var(--border-color);
+            transition: all 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 15px rgba(232, 70, 10, 0.15);
+            border-color: #e8460a;
+        }
+
+        .stat-value {
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #e8460a;
+            font-family: Georgia, serif;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-top: 0.5rem;
+            font-weight: 600;
+        }
+
+        /* Bounce Container */
+        .bounce-container {
+            background: var(--card-background);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .bounce-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .bounce-title {
+            font-family: Georgia, serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .bounce-count {
+            background: #e8460a;
+            color: white;
+            padding: 0.5rem 1.25rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1rem;
+        }
+
+        .bounce-instruction {
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+        }
+
+        .bounce-instruction strong {
+            color: var(--text-primary);
+        }
+
+        .bounce-list {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .bounce-item {
+            background: var(--input-background);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.25s;
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .bounce-item:hover {
+            border-color: #e8460a;
+            box-shadow: 0 4px 6px rgba(232, 70, 10, 0.15);
+            transform: translateX(5px);
+        }
+
+        .bounce-item.analyzed {
+            background: rgba(40, 167, 69, 0.1);
+            border-color: #28A745;
+        }
+
+        .bounce-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #e8460a 0%, #f06b39 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.75rem;
+            color: white;
+            box-shadow: 0 4px 6px rgba(232, 70, 10, 0.3);
+        }
+
+        .bounce-info {
+            flex: 1;
+        }
+
+        .bounce-sender {
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0.25rem;
+            font-size: 1rem;
+        }
+
+        .bounce-preview {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .bounce-badge {
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .badge-departure {
+            background: rgba(232, 70, 10, 0.15);
+            color: #e8460a;
+            border: 1px solid rgba(232, 70, 10, 0.3);
+        }
+
+        .badge-contact {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28A745;
+            border: 1px solid rgba(40, 167, 69, 0.3);
+        }
+
+        .badge-autoreply {
+            background: rgba(23, 162, 184, 0.15);
+            color: #17A2B8;
+            border: 1px solid rgba(23, 162, 184, 0.3);
+        }
+
+        /* Analysis Section */
+        .analysis-section {
+            background: var(--card-background);
+            border-radius: 8px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-bottom: 1.5rem;
+        }
+
+        .analysis-header {
+            background: linear-gradient(135deg, #e8460a 0%, #f06b39 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 6px rgba(232, 70, 10, 0.3);
+        }
+
+        .analysis-header h3 {
+            margin: 0;
+            font-size: 1.5rem;
+            font-family: Georgia, serif;
+            font-weight: 700;
+        }
+
+        .analysis-header p {
+            margin: 0.5rem 0 0 0;
+            opacity: 0.95;
+            font-size: 1rem;
+        }
+
+        .email-display {
+            background: var(--input-background);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 2px solid var(--border-color);
+        }
+
+        .email-meta {
+            display: grid;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .email-meta strong {
+            color: #e8460a;
+            font-weight: 600;
+        }
+
+        .email-content {
+            background: var(--background-secondary);
+            padding: 1.5rem;
+            border-radius: 4px;
+            max-height: 250px;
+            overflow-y: auto;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            border: 1px solid var(--border-color);
+        }
+
+        /* Results Section */
+        .results-section {
+            background: var(--card-background);
+            border-radius: 8px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            margin-bottom: 1.5rem;
+        }
+
+        .results-header {
+            background: linear-gradient(135deg, #e8460a 0%, #f06b39 100%);
+            padding: 1rem 2rem;
+            text-align: center;
+        }
+
+        .results-header h3 {
+            font-family: Georgia, serif;
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+        }
+
+        .results-body {
+            padding: 2rem;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+            min-width: 1200px;
+        }
+
+        .data-table thead {
+            background: linear-gradient(135deg, #2C2C2C 0%, #4A4A4A 100%);
+        }
+
+        .data-table thead th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 700;
+            color: white;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .data-table tbody tr {
+            background: var(--background-secondary);
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.25s;
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: var(--input-background);
+        }
+
+        .data-table tbody tr:hover {
+            background: var(--hover-background);
+            transform: scale(1.005);
+            box-shadow: 0 4px 6px rgba(232, 70, 10, 0.1);
+        }
+
+        .data-table tbody td {
+            padding: 1rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-employee-departure {
+            background: rgba(232, 70, 10, 0.15);
+            color: #e8460a;
+        }
+
+        .badge-delete {
+            background: rgba(220, 53, 69, 0.15);
+            color: #DC3545;
+        }
+
+        .badge-add {
+            background: rgba(40, 167, 69, 0.15);
+            color: #28A745;
+        }
+
+        .email-value {
+            font-family: 'Courier New', Courier, monospace;
+            color: #e8460a;
+            font-weight: 600;
+            background: var(--input-background);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+
+        .explanation-content {
+            padding: 0.75rem;
+            background: var(--input-background);
+            border-left: 4px solid #e8460a;
+            border-radius: 4px;
+            line-height: 1.7;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        /* Success Message */
+        .success-message {
+            background: linear-gradient(135deg, #e8460a 0%, #f06b39 100%);
+            color: white;
+            padding: 3rem 2rem;
+            border-radius: 8px;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 15px rgba(232, 70, 10, 0.3);
+        }
+
+        .success-message h3 {
+            font-family: Georgia, serif;
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+        }
+
+        .success-message p {
+            font-size: 1.125rem;
+            opacity: 0.95;
+            line-height: 1.7;
+        }
+
+        /* Footer - PwC Charter Compliant */
+        .footer {
+            background: var(--footer-background);
+            color: white;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: auto;
+        }
+
+        .footer__container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1.5rem;
+        }
+
+        .footer__logo-svg {
+            height: 40px;
+            width: 40px;
+        }
+
+        .footer__content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            text-align: center;
+        }
+
+        .footer__copyright {
+            margin: 0;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+
+        .footer__text {
+            margin: 0;
+            font-size: 0.875rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        @media (min-width: 768px) {
+            .footer__container {
+                flex-direction: row;
+                justify-content: space-between;
+            }
+
+            .footer__content {
+                flex-direction: row;
+                gap: 1rem;
+                text-align: left;
+            }
+
+            .footer__text {
+                padding-left: 1rem;
+                border-left: 1px solid rgba(255, 255, 255, 0.2);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .story-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            .bounce-item {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .story-text h1 {
+                font-size: 1.875rem;
+            }
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Page Header with Logo -->
+    <header class="page-header">
+        <div class="page-header__container">
+            <a href="#" class="page-header__logo">
+                <svg class="page-header__logo-svg" width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M66.7 47.3001C64.2 47.7001 63 49.5001 63 52.7001C63 55.9001 64.7 58.1001 67.2 58.1001C69.7 58.1001 69.5 57.7001 71.8 56.6001V59.2001C69.1 60.5001 67.5 60.8001 65.2 60.8001C62.9 60.8001 61.1 60.2001 59.8 58.8001C58.4 57.4001 57.7 55.5001 57.7 53.5001C57.7 48.9001 61.1 45.8001 66.1 45.8001C71.1 45.8001 71.7 47.3001 71.7 49.5001C71.7 51.7001 70.6 51.9001 69.1 51.9001C67.6 51.9001 67.6 51.7001 66.8 51.2001V47.3001H66.7ZM54.6 53.4001C56.8 50.6001 57.6 49.5001 57.6 48.1001C57.6 46.7001 56.5 45.6001 55.1 45.6001C53.7 45.6001 53.4 46.0001 53 46.5001V52.2001L49.4 57.0001V46.0001H46L40.3 55.5001V46.0001H38.3L33.1 47.3001V48.6001L35.9 48.9001V60.5001H39.6L45.1 51.5001V60.5001H49.1L54.7 53.4001H54.6ZM22.2 49.0001C23 49.0001 23.5 48.8001 23.9 48.8001C26.3 48.8001 27.6 50.4001 27.6 53.4001C27.6 56.4001 26 58.8001 23.1 58.8001C20.2 58.8001 22.7 58.8001 22.3 58.8001V49.1001L22.2 49.0001ZM22.2 60.4001C23.1 60.4001 24.1 60.4001 24.6 60.4001C29.5 60.4001 32.6 57.3001 32.6 52.6001C32.6 47.9001 30.3 45.7001 27.1 45.7001C23.9 45.7001 24.8 46.0001 22.2 47.6001V45.7001H20.7L15 47.4001V48.8001H17.4V65.0001L15.3 65.5001V66.8001H24.6V65.5001L22.2 65.0001V60.3001V60.4001Z" fill="black"/>
+                    <path d="M64.1 41.8H48.6L51.2 37.4H66.7L64.1 41.8ZM84.9 33H69.4L66.8 37.4H82.3L84.9 33Z" fill="#FD5108"/>
+                </svg>
+                <span class="page-header__app-name" data-i18n="app_title">Analyse des Rebonds d'Emails</span>
+            </a>
+            <div class="theme-switcher">
+                <!-- Language Toggle -->
+                <button id="lang-toggle" style="background: linear-gradient(135deg, #e8460a 0%, #f06b39 100%); color: white; border: none; border-radius: 6px; padding: 0.5rem 1rem; font-weight: 600; cursor: pointer; transition: all 0.3s; font-size: 0.875rem; display: flex; align-items: center; gap: 0.5rem;" onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 8px rgba(232, 70, 10, 0.3)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                    <span id="lang-icon">🇫🇷</span>
+                    <span id="lang-text">FR</span>
+                </button>
+                <!-- Theme Toggle -->
+                <label class="toggle">
+                    <input type="checkbox" class="toggle-input" id="theme-toggle">
+                    <span class="toggle-slider">
+                        <span class="toggle-icon toggle-icon-on">🌙</span>
+                        <span class="toggle-icon toggle-icon-off">☀️</span>
+                    </span>
+                </label>
+            </div>
+        </div>
+    </header>
+
+
+    <!-- Timeline Container -->
+    <div class="timeline-container">
+        
+        <!-- Quick Documentation Cards -->
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
+            <!-- Card 1: What is this tool? -->
+            <div style="background: var(--card-background); border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); border-top: 4px solid #e8460a; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <h3 style="font-family: Georgia, serif; font-size: 1.25rem; font-weight: 700; color: #e8460a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span data-i18n="doc_card1_title">🎯 Qu'est-ce que cet outil ?</span>
+                </h3>
+                <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin: 0;" data-i18n="doc_card1_text">
+                    Un système alimenté par l'IA qui analyse automatiquement les rebonds d'emails, les classifie, extrait les informations de contact et génère des recommandations actionnables pour maintenir votre base de données marketing propre et à jour.
+                </p>
+            </div>
+
+            <!-- Card 2: How to use -->
+            <div style="background: var(--card-background); border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); border-top: 4px solid #28A745; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <h3 style="font-family: Georgia, serif; font-size: 1.25rem; font-weight: 700; color: #28A745; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span data-i18n="doc_card2_title">🚀 Comment utiliser</span>
+                </h3>
+                <ol style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.7; margin: 0; padding-left: 1.25rem;" id="doc-card2-list">
+                    <li><strong data-i18n="doc_card2_step1_bold">Cliquez</strong> <span data-i18n="doc_card2_step1_text">sur le bouton de campagne ci-dessous pour voir la démo</span></li>
+                    <li><strong data-i18n="doc_card2_step2_bold">Cliquez</strong> <span data-i18n="doc_card2_step2_text">sur les emails rebondis pour les analyser</span></li>
+                    <li><strong data-i18n="doc_card2_step3_bold">Visualisez</strong> <span data-i18n="doc_card2_step3_text">les contacts et actions extraits par l'IA</span></li>
+                </ol>
+            </div>
+
+            <!-- Card 3: Classifications -->
+            <div style="background: var(--card-background); border-radius: 8px; padding: 1.5rem; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); border-top: 4px solid #17A2B8; transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <h3 style="font-family: Georgia, serif; font-size: 1.25rem; font-weight: 700; color: #17A2B8; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <span data-i18n="doc_card3_title">📊 Classifications</span>
+                </h3>
+                <ul style="color: var(--text-secondary); font-size: 0.9rem; line-height: 1.6; margin: 0; padding-left: 1.25rem; list-style: none;" id="doc-card3-list">
+                    <li>🔧 <strong data-i18n="doc_card3_class1_name">Problèmes Techniques</strong> <span data-i18n="doc_card3_class1_desc">- Adresse invalide</span></li>
+                    <li>👋 <strong data-i18n="doc_card3_class2_name">Départ Employé</strong> <span data-i18n="doc_card3_class2_desc">- A quitté l'entreprise</span></li>
+                    <li>✈️ <strong data-i18n="doc_card3_class3_name">Absence Temporaire</strong> <span data-i18n="doc_card3_class3_desc">- En vacances</span></li>
+                    <li>📧 <strong data-i18n="doc_card3_class4_name">Mise à Jour Email</strong> <span data-i18n="doc_card3_class4_desc">- Nouvelle adresse</span></li>
+                    <li>🚫 <strong data-i18n="doc_card3_class5_name">Désabonnement</strong> <span data-i18n="doc_card3_class5_desc">- Demande de retrait</span></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Campaign Brief -->
+        <div style="background: var(--card-background); border-radius: 8px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);" id="notif1">
+            <h2 style="font-family: Georgia, serif; font-size: 1.75rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem;" data-i18n="campaign_title">Campagne "Nouveaux Services 2025"</h2>
+            <p style="color: var(--text-secondary); font-size: 1rem; line-height: 1.7; margin-bottom: 0;">
+                <span data-i18n="campaign_desc">Lancement d'une campagne marketing ciblée vers </span><strong style="color: #e8460a;">5,000 <span data-i18n="campaign_desc_key">décideurs clés</span></strong><span data-i18n="campaign_desc2"> dans les secteurs automobile et industriel. Les contenus personnalisés et les segments affinés visent à maximiser l'engagement et générer de nouvelles opportunités commerciales.</span>
+            </p>
+        </div>
+
+        <!-- Action Section: Launch Campaign -->
+        <div class="action-section" id="launchSection">
+            <div class="action-title" data-i18n="action_title">🚀 Le moment est venu !</div>
+            <p class="action-description" data-i18n="action_description">Une dernière vérification des paramètres avant le lancement. Tout est prêt pour envoyer la campagne...</p>
+            <button class="btn-campaign" onclick="launchCampaign()">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M22 2L11 13"></path>
+                    <path d="M22 2L15 22L11 13L2 9L22 2Z"></path>
+                </svg>
+                <span data-i18n="launch_button">Lancer la Campagne</span>
+            </button>
+        </div>
+
+        <!-- Loading Section -->
+        <div style="background: var(--card-background); border-radius: 8px; padding: 2rem; margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);" class="hidden" id="loadingSection">
+            <h3 style="font-family: Georgia, serif; font-size: 1.5rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1.5rem; text-align: center;" data-i18n="loading_title">📤 Outbox - Envoi en cours</h3>
+            <div id="emailSendingList" style="display: grid; gap: 0.5rem; max-width: 900px; margin: 0 auto;">
+                <!-- Will be populated dynamically -->
+            </div>
+        </div>
+
+        <!-- Notification 2: Campaign Sent -->
+        <div style="background: var(--card-background); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); border-left: 4px solid #28A745;" class="hidden" id="notif2">
+            <h3 style="font-family: Georgia, serif; font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;" data-i18n="notif2_title">✅ Campagne envoyée !</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin: 0;" data-i18n="notif2_text">
+                Les emails ont été envoyés avec succès. Consultez les résultats en temps réel ci-dessous.
+            </p>
+        </div>
+
+        <!-- Stats Dashboard -->
+        <div class="stats-dashboard hidden" id="statsSection">
+            <div class="dashboard-title" data-i18n="stats_title">
+                📊 Résultats en Temps Réel
+            </div>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">10</div>
+                    <div class="stat-label" data-i18n="stat_sent">Emails Envoyés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">7</div>
+                    <div class="stat-label" data-i18n="stat_delivered">Livrés</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div class="stat-label" data-i18n="stat_bounces">Rebonds</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">70%</div>
+                    <div class="stat-label" data-i18n="stat_success">Taux de Succès</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notification 3: Bounces Detected -->
+        <div style="background: var(--card-background); border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); border-left: 4px solid #e8460a;" class="hidden" id="notif3">
+            <h3 style="font-family: Georgia, serif; font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.5rem;" data-i18n="notif3_title">⚠️ Alerte : Rebonds détectés</h3>
+            <p style="color: var(--text-secondary); font-size: 0.95rem; line-height: 1.6; margin: 0;">
+                <strong style="color: #e8460a;"><span data-i18n="notif3_count">3 emails ont rebondi</span></strong> <span data-i18n="notif3_text">avec des réponses automatiques. L'analyse IA permet d'extraire automatiquement les informations pertinentes pour optimiser votre base de contacts.</span>
+            </p>
+        </div>
+
+        <!-- Bounce Container -->
+        <div class="bounce-container hidden" id="bounceSection">
+            <div class="bounce-header">
+                <div class="bounce-title" data-i18n="bounce_title">📬 Inbox : Emails Rebondis</div>
+                <div class="bounce-count" id="bounceCount">3</div>
+            </div>
+            <p class="bounce-instruction">
+                <strong data-i18n="bounce_inst_bold">Analyse des réponses automatiques.</strong> <span data-i18n="bounce_inst_text">Cliquez sur chaque email pour découvrir les informations clés. L'IA va extraire automatiquement les insights commerciaux pertinents...</span>
+            </p>
+            <div class="bounce-list" id="bounceList">
+                <!-- Dynamically populated -->
+            </div>
+        </div>
+
+        <!-- Analysis Section -->
+        <div class="analysis-section hidden" id="analysisSection">
+            <div class="email-display" id="emailDisplay">
+                <!-- Dynamically populated -->
+            </div>
+            <div class="loading-section" id="aiLoading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" data-i18n="ai_loading">Traitement du langage naturel...</div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="results-section hidden" id="resultsSection">
+            <div class="results-header">
+                <h3 data-i18n="results_title">Résultats d'Analyse</h3>
+            </div>
+            <div class="results-body">
+                <!-- Classification Badge -->
+                <div id="classificationDisplay" style="margin-bottom: 1.5rem; display: none;">
+                    <div style="background: var(--input-background); border: 2px solid var(--border-color); border-radius: 8px; padding: 1rem; display: inline-flex; align-items: center; gap: 1rem;">
+                        <span style="font-weight: 600; color: var(--text-primary); font-size: 0.875rem; text-transform: uppercase; letter-spacing: 0.5px;" data-i18n="classification_label">Classification :</span>
+                        <span id="classificationBadge"></span>
+                    </div>
+                </div>
+                
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th data-i18n="table_action">Action</th>
+                                <th data-i18n="table_email">Email</th>
+                                <th data-i18n="table_name">Nom</th>
+                                <th data-i18n="table_job">Poste</th>
+                                <th data-i18n="table_phone">Téléphone</th>
+                                <th data-i18n="table_org">Organisation</th>
+                                <th data-i18n="table_explanation">Explication</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Dynamically populated -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Message -->
+        <div class="success-message hidden" id="successMessage">
+            <h3 data-i18n="success_title">🎉 Mission Accomplie !</h3>
+            <p><span data-i18n="success_text1">Tous les emails ont été analysés avec succès. L'équipe dispose maintenant d'</span><strong data-i18n="success_text2">insights précieux</strong><span data-i18n="success_text3"> pour optimiser les prochaines campagnes et identifier de nouvelles opportunités commerciales. Grâce à l'IA, ce qui prenait des heures a été fait en quelques minutes !</span></p>
+        </div>
+
+    </div>
+
+    <!-- Footer with Logo -->
+    <footer class="footer">
+        <div class="footer__container">
+            <div class="footer__logo">
+                <svg class="footer__logo-svg" width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M66.7 47.3001C64.2 47.7001 63 49.5001 63 52.7001C63 55.9001 64.7 58.1001 67.2 58.1001C69.7 58.1001 69.5 57.7001 71.8 56.6001V59.2001C69.1 60.5001 67.5 60.8001 65.2 60.8001C62.9 60.8001 61.1 60.2001 59.8 58.8001C58.4 57.4001 57.7 55.5001 57.7 53.5001C57.7 48.9001 61.1 45.8001 66.1 45.8001C71.1 45.8001 71.7 47.3001 71.7 49.5001C71.7 51.7001 70.6 51.9001 69.1 51.9001C67.6 51.9001 67.6 51.7001 66.8 51.2001V47.3001H66.7ZM54.6 53.4001C56.8 50.6001 57.6 49.5001 57.6 48.1001C57.6 46.7001 56.5 45.6001 55.1 45.6001C53.7 45.6001 53.4 46.0001 53 46.5001V52.2001L49.4 57.0001V46.0001H46L40.3 55.5001V46.0001H38.3L33.1 47.3001V48.6001L35.9 48.9001V60.5001H39.6L45.1 51.5001V60.5001H49.1L54.7 53.4001H54.6ZM22.2 49.0001C23 49.0001 23.5 48.8001 23.9 48.8001C26.3 48.8001 27.6 50.4001 27.6 53.4001C27.6 56.4001 26 58.8001 23.1 58.8001C20.2 58.8001 22.7 58.8001 22.3 58.8001V49.1001L22.2 49.0001ZM22.2 60.4001C23.1 60.4001 24.1 60.4001 24.6 60.4001C29.5 60.4001 32.6 57.3001 32.6 52.6001C32.6 47.9001 30.3 45.7001 27.1 45.7001C23.9 45.7001 24.8 46.0001 22.2 47.6001V45.7001H20.7L15 47.4001V48.8001H17.4V65.0001L15.3 65.5001V66.8001H24.6V65.5001L22.2 65.0001V60.3001V60.4001Z" fill="white"/>
+                    <path d="M64.1 41.8H48.6L51.2 37.4H66.7L64.1 41.8ZM84.9 33H69.4L66.8 37.4H82.3L84.9 33Z" fill="#FD5108"/>
+                </svg>
+            </div>
+            <div class="footer__content">
+                <p class="footer__copyright">© 2025 PwC. <span data-i18n="footer_rights">Tous droits réservés.</span></p>
+                <p class="footer__text" data-i18n="footer_text">Système d'Analyse des Rebonds d'Emails</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const bounceEmails = [
+            {
+                id: 1,
+                sender: "veronique.sample@jtekt-europe.com",
+                preview: "Hello, I leave JTEKT for retirement. Lionel TERRIER will replace me...",
+                type: "DÉPART",
+                badgeClass: "badge-departure",
+                emoji: "👋",
+                fullBody: "Hello \n\nI leave JTEKT for retirement. Thank you for your good collaboration.\n\nLionel TERRIER will replace me:\nLionel TERRIER\nJTEKT Europe - Purchasing Department\nIndirects and Investments Group Manager\nTel: +33 (0)4.72.39.00.00\nCell: +33 (0)6.76.56.00.00\nlionel.terrier@exemple.eu\n\nStay safe!\n\nBest regards,\nVéronique Sample",
+                results: [
+                    {
+                        classification: "Employee_Departure",
+                        action: "delete_contact",
+                        email: "veronique.sample@jtekt-europe.com",
+                        name: "Véronique Sample",
+                        job: "",
+                        phone: "",
+                        org: "JTEKT Europe",
+                        explanation: "Véronique Sample part à la retraite. Contact à supprimer de la base.",
+                        badgeClass: "badge-employee-departure",
+                        actionClass: "badge-delete"
+                    },
+                    {
+                        classification: "Employee_Departure",
+                        action: "add_new_contact",
+                        email: "lionel.terrier@exemple.eu",
+                        name: "Lionel TERRIER",
+                        job: "Indirects and Investments Group Manager",
+                        phone: "+33 (0)4.72.39.00.00 / +33 (0)6.76.56.00.00",
+                        org: "JTEKT Europe",
+                        explanation: "Nouveau contact de remplacement identifié automatiquement par l'IA.",
+                        badgeClass: "badge-employee-departure",
+                        actionClass: "badge-add"
+                    }
+                ]
+            },
+            {
+                id: 2,
+                sender: "sebastien.bachem@sante.gouv.fr",
+                preview: "Merci de m'écrire sur ma nouvelle adresse : sebastien_2.sample@exemple.gouv.fr...",
+                type: "NOUVEAU",
+                badgeClass: "badge-contact",
+                emoji: "📧",
+                fullBody: "Bonjour,\n\nMerci de m'écrire sur ma nouvelle adresse mail : sebastien_2.sample@exemple.gouv.fr\n\nBien à vous,\n\nSébastien BACHEM\nDirecteur du Pole des Projets de E-Santé\n________________________________\nNos ministères agissent pour un développement durable.\nPréservons l'environnement : n'imprimons que si nécessaire !",
+                results: [
+                    {
+                        classification: "Email_Update",
+                        action: "delete_contact",
+                        email: "sebastien.bachem@sante.gouv.fr",
+                        name: "Sébastien BACHEM",
+                        job: "Directeur du Pole des Projets de E-Santé",
+                        phone: "",
+                        org: "Ministère de la Santé",
+                        explanation: "Ancienne adresse email obsolète à supprimer.",
+                        badgeClass: "badge-add",
+                        actionClass: "badge-delete"
+                    },
+                    {
+                        classification: "Email_Update",
+                        action: "add_new_contact",
+                        email: "sebastien_2.sample@exemple.gouv.fr",
+                        name: "Sébastien BACHEM",
+                        job: "Directeur du Pole des Projets de E-Santé",
+                        phone: "",
+                        org: "Ministère de la Santé",
+                        explanation: "Nouvelle adresse email extraite automatiquement.",
+                        badgeClass: "badge-add",
+                        actionClass: "badge-add"
+                    }
+                ]
+            },
+            {
+                id: 3,
+                sender: "veronique.dupont@sante.gouv.fr",
+                preview: "En déplacement professionnel jusqu'au 25 novembre. Contacter Greg MARTIN...",
+                type: "ABSENCE",
+                badgeClass: "badge-autoreply",
+                emoji: "✈️",
+                fullBody: "Bonjour,\n\nJe suis en déplacement professionnel et indisponible jusqu'au 25 novembre 2025. L'accès à ma messagerie sera très limité durant cette période.\n\nPour toute question urgente, merci de contacter :\n- Greg MARTIN — greg.martin@exemple.gouv.fr — +33 1 98 76 54 32\n- Ou l'équipe e-santé : esante@exemple.gouv.fr\n\nVotre message sera traité dès mon retour.\n\nCordialement,\nVéronique DUPONT\nPôle Projets e-santé\n________________________________\nNos ministères agissent pour un développement durable.\nPréservons l'environnement : n'imprimons que si nécessaire !",
+                results: [
+                    {
+                        classification: "Temporary_Absence",
+                        action: "add_new_contact",
+                        email: "greg.martin@exemple.gouv.fr",
+                        name: "Greg MARTIN",
+                        job: "",
+                        phone: "+33 1 98 76 54 32",
+                        org: "",
+                        explanation: "Contact d'urgence identifié pour la période d'absence.",
+                        badgeClass: "badge-autoreply",
+                        actionClass: "badge-add"
+                    },
+                    {
+                        classification: "Temporary_Absence",
+                        action: "add_new_contact",
+                        email: "esante@exemple.gouv.fr",
+                        name: "Équipe e-santé",
+                        job: "",
+                        phone: "",
+                        org: "",
+                        explanation: "Contact alternatif de l'équipe extrait automatiquement.",
+                        badgeClass: "badge-autoreply",
+                        actionClass: "badge-add"
+                    }
+                ]
+            }
+        ];
+
+        let analyzedCount = 0;
+        const totalBounces = bounceEmails.length;
+
+        const sampleEmails = [
+            {
+                from: "marketing@pwc.fr",
+                to: "j.dupont@renault.com",
+                subject: "Nouveaux Services 2025 - Solutions innovantes pour Renault",
+                preview: "Bonjour Jean, Nous sommes ravis de vous présenter nos nouveaux services..."
+            },
+            {
+                from: "marketing@pwc.fr",
+                to: "m.martin@stellantis.com",
+                subject: "Nouveaux Services 2025 - Optimisation de votre performance",
+                preview: "Bonjour Marie, Découvrez comment nos solutions peuvent transformer..."
+            },
+            {
+                from: "marketing@pwc.fr",
+                to: "t.bernard@valeo.com",
+                subject: "Nouveaux Services 2025 - Innovation et expertise",
+                preview: "Bonjour Thomas, PwC vous accompagne dans vos défis stratégiques..."
+            },
+            {
+                from: "marketing@pwc.fr",
+                to: "s.claire@forvia.com",
+                subject: "Nouveaux Services 2025 - Partenariat stratégique",
+                preview: "Bonjour Sophie, Explorez nos services dédiés à l'industrie automobile..."
+            },
+            {
+                from: "marketing@pwc.fr",
+                to: "l.petit@michelin.com",
+                subject: "Nouveaux Services 2025 - Excellence opérationnelle",
+                preview: "Bonjour Lucas, Transformez votre entreprise avec nos solutions..."
+            },
+            {
+                from: "marketing@pwc.fr",
+                to: "e.roux@plasticomnium.com",
+                subject: "Nouveaux Services 2025 - Croissance durable",
+                preview: "Bonjour Emma, Accélérez votre transformation digitale avec PwC..."
+            },
+            {
+                from: "marketing@pwc.fr",
+                to: "a.moreau@continental.fr",
+                subject: "Nouveaux Services 2025 - Solutions sur-mesure",
+                preview: "Bonjour Antoine, Nos experts sont à votre disposition pour..."
+            },
+            {
+                from: "marketing@pwc.fr",
+                to: "j.simon@bosch.fr",
+                subject: "Nouveaux Services 2025 - Accompagnement personnalisé",
+                preview: "Bonjour Julie, Découvrez nos offres exclusives pour le secteur..."
+            },
+            {
+                from: "marketing@pwc.fr",
+                to: "p.laurent@schaeffler.com",
+                subject: "Nouveaux Services 2025 - Performance et innovation",
+                preview: "Bonjour Pierre, PwC vous propose des solutions adaptées à vos..."
+            },
+            {
+                from: "marketing@pwc.fr",
+                to: "c.dubois@safran.com",
+                subject: "Nouveaux Services 2025 - Expertise sectorielle",
+                preview: "Bonjour Camille, Profitez de notre expertise reconnue dans..."
+            }
+        ];
+
+        function launchCampaign() {
+            const launchBtn = document.querySelector('.btn-campaign');
+            launchBtn.disabled = true;
+            
+            // Hide launch section
+            document.getElementById('launchSection').classList.add('hidden');
+            
+            // Show loading
+            const loadingSection = document.getElementById('loadingSection');
+            loadingSection.classList.remove('hidden');
+            
+            // Create email list
+            const emailList = document.getElementById('emailSendingList');
+            emailList.innerHTML = '';
+            
+            sampleEmails.forEach((email, index) => {
+                const emailItem = document.createElement('div');
+                emailItem.id = `email-${index}`;
+                emailItem.style.cssText = 'padding: 1rem; background: var(--input-background); border: 1px solid var(--border-color); border-radius: 6px; opacity: 0.3; transition: all 0.4s;';
+                emailItem.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 0.5rem;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 0.25rem;">
+                                <span style="font-size: 0.75rem; color: var(--text-secondary);">De:</span>
+                                <span style="font-size: 0.75rem; color: var(--text-primary); font-family: 'Courier New', monospace;">${email.from}</span>
+                            </div>
+                            <div style="display: flex; gap: 0.5rem; align-items: center;">
+                                <span style="font-size: 0.75rem; color: var(--text-secondary);">À:</span>
+                                <span style="font-size: 0.75rem; color: var(--text-primary); font-family: 'Courier New', monospace;">${email.to}</span>
+                            </div>
+                        </div>
+                        <div id="status-${index}" style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.75rem; color: var(--text-secondary); padding: 0.25rem 0.75rem; background: var(--border-color); border-radius: 12px;">
+                            En attente
+                        </div>
+                    </div>
+                    <div style="font-weight: 600; color: var(--text-primary); font-size: 0.875rem; margin-bottom: 0.25rem;">${email.subject}</div>
+                    <div style="font-size: 0.75rem; color: var(--text-secondary); line-height: 1.4;">${email.preview}</div>
+                `;
+                emailList.appendChild(emailItem);
+            });
+            
+            // Animate sending
+            sampleEmails.forEach((email, index) => {
+                setTimeout(() => {
+                    const emailItem = document.getElementById(`email-${index}`);
+                    const statusBadge = document.getElementById(`status-${index}`);
+                    
+                    // Mark as sending
+                    emailItem.style.opacity = '1';
+                    emailItem.style.background = 'var(--card-background)';
+                    emailItem.style.borderColor = '#e8460a';
+                    statusBadge.style.background = 'linear-gradient(135deg, #e8460a 0%, #f06b39 100%)';
+                    statusBadge.style.color = 'white';
+                    statusBadge.textContent = 'Envoi...';
+                    
+                    // Mark as sent after delay
+                    setTimeout(() => {
+                        emailItem.style.borderColor = '#28A745';
+                        statusBadge.style.background = '#28A745';
+                        statusBadge.textContent = '✓ Envoyé';
+                        
+                        if (index === sampleEmails.length - 1) {
+                            setTimeout(showCampaignResults, 1000);
+                        }
+                    }, 1000);
+                }, index * 600);
+            });
+        }
+
+        function showCampaignResults() {
+            // Hide loading
+            document.getElementById('loadingSection').classList.add('hidden');
+            
+            // Show success notification
+            document.getElementById('notif2').classList.remove('hidden');
+            
+            // Show stats after delay
+            setTimeout(() => {
+                document.getElementById('statsSection').classList.remove('hidden');
+                
+                // Show bounce notification
+                setTimeout(() => {
+                    document.getElementById('notif3').classList.remove('hidden');
+                    
+                    // Show bounce section
+                    setTimeout(() => {
+                        showBounces();
+                    }, 1000);
+                }, 1500);
+            }, 1000);
+        }
+
+        function showBounces() {
+            const bounceSection = document.getElementById('bounceSection');
+            bounceSection.classList.remove('hidden');
+            
+            const bounceList = document.getElementById('bounceList');
+            bounceList.innerHTML = '';
+            
+            bounceEmails.forEach((email, index) => {
+                setTimeout(() => {
+                    const item = document.createElement('div');
+                    item.className = 'bounce-item';
+                    item.id = `bounce-${email.id}`;
+                    item.onclick = () => analyzeEmail(email);
+                    
+                    item.innerHTML = `
+                        <div class="bounce-avatar">${email.emoji}</div>
+                        <div class="bounce-info">
+                            <div class="bounce-sender">${email.sender}</div>
+                            <div class="bounce-preview">${email.preview}</div>
+                        </div>
+                        <span class="bounce-badge ${email.badgeClass}">${email.type}</span>
+                    `;
+                    
+                    bounceList.appendChild(item);
+                }, index * 400);
+            });
+            
+            bounceSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function analyzeEmail(email) {
+            // Visual feedback on selection
+            document.querySelectorAll('.bounce-item').forEach(item => {
+                item.style.opacity = '0.5';
+                item.style.pointerEvents = 'none';
+            });
+            const selectedItem = document.getElementById(`bounce-${email.id}`);
+            selectedItem.style.opacity = '1';
+            selectedItem.style.borderWidth = '3px';
+            
+            // Show analysis section
+            const analysisSection = document.getElementById('analysisSection');
+            analysisSection.classList.remove('hidden');
+            
+            // Display email content
+            document.getElementById('emailDisplay').innerHTML = `
+                <div class="email-meta">
+                    <div><strong data-i18n="email_from">De:</strong> ${email.sender}</div>
+                    <div><strong data-i18n="email_bounce_type">Type de rebond:</strong> ${email.type}</div>
+                    <div><strong data-i18n="email_time">Heure de réception:</strong> 09:30 AM</div>
+                </div>
+                <div class="email-content">${email.fullBody.replace(/\n/g, '<br>')}</div>
+            `;
+            
+            // Apply translations to newly added content
+            if (window.applyTranslations) {
+                window.applyTranslations();
+            }
+            
+            document.getElementById('aiLoading').style.display = 'block';
+            
+            analysisSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            
+            // Simulate AI analysis
+            setTimeout(() => {
+                document.getElementById('aiLoading').style.display = 'none';
+                selectedItem.classList.add('analyzed');
+                analyzedCount++;
+                
+                // Update counter
+                const remaining = totalBounces - analyzedCount;
+                document.getElementById('bounceCount').textContent = remaining;
+                
+                // Display results
+                displayResults(email.results);
+                
+                // Re-enable bounce items for next click
+                setTimeout(() => {
+                    document.querySelectorAll('.bounce-item:not(.analyzed)').forEach(item => {
+                        item.style.opacity = '1';
+                        item.style.pointerEvents = 'auto';
+                    });
+                    
+                    // Check if all analyzed
+                    if (analyzedCount === totalBounces) {
+                        setTimeout(() => {
+                            document.getElementById('successMessage').classList.remove('hidden');
+                            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        }, 2000);
+                    }
+                }, 1000);
+            }, 2800);
+        }
+
+        function displayResults(results) {
+            const tableBody = document.getElementById('tableBody');
+            const resultsSection = document.getElementById('resultsSection');
+            const classificationDisplay = document.getElementById('classificationDisplay');
+            const classificationBadge = document.getElementById('classificationBadge');
+            
+            // Clear previous results for new email analysis
+            tableBody.innerHTML = '';
+            
+            // Display classification badge
+            if (results.length > 0) {
+                classificationDisplay.style.display = 'block';
+                classificationBadge.innerHTML = `<span class="badge ${results[0].badgeClass}" style="font-size: 0.875rem;">${results[0].classification}</span>`;
+            }
+            
+            // Display new results for current email
+            results.forEach(item => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><span class="badge ${item.actionClass}">${item.action}</span></td>
+                    <td><span class="email-value">${item.email}</span></td>
+                    <td>${item.name}</td>
+                    <td>${item.job}</td>
+                    <td>${item.phone}</td>
+                    <td>${item.org}</td>
+                    <td><div class="explanation-content">${item.explanation}</div></td>
+                `;
+                row.style.opacity = '0';
+                row.style.animation = 'fadeIn 0.5s ease forwards';
+                tableBody.appendChild(row);
+            });
+            
+            resultsSection.classList.remove('hidden');
+            
+            setTimeout(() => {
+                resultsSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }, 500);
+        }
+
+        // Add fadeIn animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeIn {
+                from { opacity: 0; transform: translateY(10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Theme Switcher Logic
+        (function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const html = document.documentElement;
+            
+            // Initialize theme from localStorage or default to light
+            function initTheme() {
+                const savedTheme = localStorage.getItem('theme') || 'light';
+                html.setAttribute('data-theme', savedTheme);
+                if (themeToggle) {
+                    themeToggle.checked = savedTheme === 'dark';
+                }
+            }
+            
+            // Toggle theme
+            function toggleTheme() {
+                const currentTheme = html.getAttribute('data-theme');
+                const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+                html.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+            }
+            
+            // Event listener
+            if (themeToggle) {
+                themeToggle.addEventListener('change', toggleTheme);
+            }
+            
+            // Initialize on load
+            initTheme();
+        })();
+
+        // Language Translation System
+        const translations = {
+            fr: {
+                // Header
+                app_title: "Analyse des Rebonds d'Emails",
+                
+                // Documentation Cards
+                doc_card1_title: "🎯 Qu'est-ce que cet outil ?",
+                doc_card1_text: "Un système alimenté par l'IA qui analyse automatiquement les rebonds d'emails, les classifie, extrait les informations de contact et génère des recommandations actionnables pour maintenir votre base de données marketing propre et à jour.",
+                doc_card2_title: "🚀 Comment utiliser",
+                doc_card2_step1_bold: "Cliquez",
+                doc_card2_step1_text: "sur le bouton de campagne ci-dessous pour voir la démo",
+                doc_card2_step2_bold: "Cliquez",
+                doc_card2_step2_text: "sur les emails rebondis pour les analyser",
+                doc_card2_step3_bold: "Visualisez",
+                doc_card2_step3_text: "les contacts et actions extraits par l'IA",
+                doc_card3_title: "📊 Classifications",
+                doc_card3_class1_name: "Problèmes Techniques",
+                doc_card3_class1_desc: "- Adresse invalide",
+                doc_card3_class2_name: "Départ Employé",
+                doc_card3_class2_desc: "- A quitté l'entreprise",
+                doc_card3_class3_name: "Absence Temporaire",
+                doc_card3_class3_desc: "- En vacances",
+                doc_card3_class4_name: "Mise à Jour Email",
+                doc_card3_class4_desc: "- Nouvelle adresse",
+                doc_card3_class5_name: "Désabonnement",
+                doc_card3_class5_desc: "- Demande de retrait",
+                
+                // Campaign Section
+                campaign_title: 'Campagne "Nouveaux Services 2025"',
+                campaign_desc: "Lancement d'une campagne marketing ciblée vers ",
+                campaign_desc_key: "décideurs clés",
+                campaign_desc2: " dans les secteurs automobile et industriel. Les contenus personnalisés et les segments affinés visent à maximiser l'engagement et générer de nouvelles opportunités commerciales.",
+                
+                // Action Section
+                action_title: "🚀 Le moment est venu !",
+                action_description: "Une dernière vérification des paramètres avant le lancement. Tout est prêt pour envoyer la campagne...",
+                launch_button: "Lancer la Campagne",
+                
+                // Loading Section
+                loading_title: "📤 Outbox - Envoi en cours",
+                
+                // Notifications
+                notif2_title: "✅ Campagne envoyée !",
+                notif2_text: "Les emails ont été envoyés avec succès. Consultez les résultats en temps réel ci-dessous.",
+                notif3_title: "⚠️ Alerte : Rebonds détectés",
+                notif3_count: "3 emails ont rebondi",
+                notif3_text: "avec des réponses automatiques. L'analyse IA permet d'extraire automatiquement les informations pertinentes pour optimiser votre base de contacts.",
+                
+                // Stats
+                stats_title: "📊 Résultats en Temps Réel",
+                stat_sent: "Emails Envoyés",
+                stat_delivered: "Livrés",
+                stat_bounces: "Rebonds",
+                stat_success: "Taux de Succès",
+                
+                // Bounce Section
+                bounce_title: "📬 Inbox : Emails Rebondis",
+                bounce_inst_bold: "Analyse des réponses automatiques.",
+                bounce_inst_text: "Cliquez sur chaque email pour découvrir les informations clés. L'IA va extraire automatiquement les insights commerciaux pertinents...",
+                
+                // AI Loading
+                ai_loading: "Traitement du langage naturel...",
+                
+                // Results Table
+                results_title: "Résultats d'Analyse",
+                classification_label: "Classification :",
+                table_action: "Action",
+                table_email: "Email",
+                table_name: "Nom",
+                table_job: "Poste",
+                table_phone: "Téléphone",
+                table_org: "Organisation",
+                table_explanation: "Explication",
+                
+                // Success Message
+                success_title: "🎉 Mission Accomplie !",
+                success_text1: "Tous les emails ont été analysés avec succès. L'équipe dispose maintenant d'",
+                success_text2: "insights précieux",
+                success_text3: " pour optimiser les prochaines campagnes et identifier de nouvelles opportunités commerciales. Grâce à l'IA, ce qui prenait des heures a été fait en quelques minutes !",
+                
+                // Footer
+                footer_rights: "Tous droits réservés.",
+                footer_text: "Système d'Analyse des Rebonds d'Emails",
+                
+                // Email Display
+                email_from: "De:",
+                email_bounce_type: "Type de rebond:",
+                email_time: "Heure de réception:"
+            },
+            en: {
+                // Header
+                app_title: "Email Bounce Analysis",
+                
+                // Documentation Cards
+                doc_card1_title: "🎯 What is this tool?",
+                doc_card1_text: "An AI-powered system that automatically analyzes email bounces, classifies them, extracts contact information, and generates actionable recommendations to keep your marketing database clean and up-to-date.",
+                doc_card2_title: "🚀 How to use",
+                doc_card2_step1_bold: "Click",
+                doc_card2_step1_text: "the campaign button below to see the demo",
+                doc_card2_step2_bold: "Click",
+                doc_card2_step2_text: "on bounce emails to analyze them",
+                doc_card2_step3_bold: "View",
+                doc_card2_step3_text: "AI-extracted contacts and actions",
+                doc_card3_title: "📊 Classifications",
+                doc_card3_class1_name: "Technical Issues",
+                doc_card3_class1_desc: "- Invalid address",
+                doc_card3_class2_name: "Employee Departure",
+                doc_card3_class2_desc: "- Left company",
+                doc_card3_class3_name: "Temporary Absence",
+                doc_card3_class3_desc: "- On vacation",
+                doc_card3_class4_name: "Email Update",
+                doc_card3_class4_desc: "- New address",
+                doc_card3_class5_name: "Unsubscribe",
+                doc_card3_class5_desc: "- Opt-out request",
+                
+                // Campaign Section
+                campaign_title: 'Campaign "New Services 2025"',
+                campaign_desc: "Launch of a targeted marketing campaign to ",
+                campaign_desc_key: "key decision-makers",
+                campaign_desc2: " in the automotive and industrial sectors. Personalized content and refined segments aim to maximize engagement and generate new business opportunities.",
+                
+                // Action Section
+                action_title: "🚀 The moment has come!",
+                action_description: "One final check of the parameters before launch. Everything is ready to send the campaign...",
+                launch_button: "Launch Campaign",
+                
+                // Loading Section
+                loading_title: "📤 Outbox - Sending in progress",
+                
+                // Notifications
+                notif2_title: "✅ Campaign sent!",
+                notif2_text: "Emails have been sent successfully. Check the real-time results below.",
+                notif3_title: "⚠️ Alert: Bounces detected",
+                notif3_count: "3 emails have bounced",
+                notif3_text: "with automatic replies. AI analysis allows automatic extraction of relevant information to optimize your contact database.",
+                
+                // Stats
+                stats_title: "📊 Real-Time Results",
+                stat_sent: "Emails Sent",
+                stat_delivered: "Delivered",
+                stat_bounces: "Bounces",
+                stat_success: "Success Rate",
+                
+                // Bounce Section
+                bounce_title: "📬 Inbox: Bounced Emails",
+                bounce_inst_bold: "Automatic reply analysis.",
+                bounce_inst_text: "Click on each email to discover key information. The AI will automatically extract relevant business insights...",
+                
+                // AI Loading
+                ai_loading: "Natural language processing...",
+                
+                // Results Table
+                results_title: "Analysis Results",
+                classification_label: "Classification:",
+                table_action: "Action",
+                table_email: "Email",
+                table_name: "Name",
+                table_job: "Position",
+                table_phone: "Phone",
+                table_org: "Organization",
+                table_explanation: "Explanation",
+                
+                // Success Message
+                success_title: "🎉 Mission Accomplished!",
+                success_text1: "All emails have been successfully analyzed. The team now has ",
+                success_text2: "valuable insights",
+                success_text3: " to optimize future campaigns and identify new business opportunities. Thanks to AI, what took hours was done in minutes!",
+                
+                // Footer
+                footer_rights: "All rights reserved.",
+                footer_text: "Email Bounce Analysis System",
+                
+                // Email Display
+                email_from: "From:",
+                email_bounce_type: "Bounce type:",
+                email_time: "Received at:"
+            }
+        };
+
+        // Language Toggle Logic
+        (function() {
+            const langToggle = document.getElementById('lang-toggle');
+            const langIcon = document.getElementById('lang-icon');
+            const langText = document.getElementById('lang-text');
+            let currentLang = 'fr'; // Default language
+
+            // Load saved language
+            const savedLang = localStorage.getItem('language') || 'fr';
+            currentLang = savedLang;
+            updateLanguageUI();
+            applyTranslations();
+
+            function updateLanguageUI() {
+                if (currentLang === 'fr') {
+                    langIcon.textContent = '🇫🇷';
+                    langText.textContent = 'FR';
+                } else {
+                    langIcon.textContent = '🇬🇧';
+                    langText.textContent = 'EN';
+                }
+            }
+
+            function applyTranslations() {
+                const elements = document.querySelectorAll('[data-i18n]');
+                elements.forEach(el => {
+                    const key = el.getAttribute('data-i18n');
+                    if (translations[currentLang][key]) {
+                        el.textContent = translations[currentLang][key];
+                    }
+                });
+            }
+            
+            // Expose applyTranslations globally
+            window.applyTranslations = applyTranslations;
+
+            function toggleLanguage() {
+                currentLang = currentLang === 'fr' ? 'en' : 'fr';
+                localStorage.setItem('language', currentLang);
+                updateLanguageUI();
+                applyTranslations();
+            }
+
+            if (langToggle) {
+                langToggle.addEventListener('click', toggleLanguage);
+            }
+        })();
+    </script>
+</body>
+</html>
