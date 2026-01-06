@@ -9,8 +9,8 @@ from langfuse import get_client, observe
 # from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
 from openinference.instrumentation.google_genai import GoogleGenAIInstrumentor
 
-from python.mcp_tracing.src.config import AppConfig
-from python.mcp_tracing.src.utils.otel_utils import TracedMCPServer
+from .config import AppConfig
+from .utils.otel_utils import TracedMCPServer
 
 config = AppConfig()
 langfuse = get_client()

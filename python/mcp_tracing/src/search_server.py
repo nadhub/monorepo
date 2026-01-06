@@ -2,8 +2,8 @@ from exa_py import Exa
 from fastmcp import FastMCP
 from langfuse import Langfuse, observe
 
-from python.mcp_tracing.src.config import AppConfig
-from python.mcp_tracing.src.utils.otel_utils import with_otel_context_from_meta
+from .config import AppConfig
+from .utils.otel_utils import with_otel_context_from_meta
 
 config = AppConfig()
 langfuse = Langfuse()

@@ -9,8 +9,5 @@ py_library(
         "tracer_interface.py",
     ],
     visibility = ["//:__subpackages__"],
-    deps = [
-        "@pip//langfuse",
-        "@pip//openinference_instrumentation_google_genai",
-    ],
+    deps = ["@pip//langfuse"],
 )

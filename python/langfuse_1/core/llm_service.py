@@ -12,10 +12,17 @@ class LLMService:
     Decoupled from specific observability implementation.
     """
 
-    def __init__(self, api_key: str, tracer: TracerInterface, model_name: str = "gpt-4o-mini"):
+    def __init__(
+        self,
+        api_key: str,
+        base_url: str,
+        tracer: TracerInterface,
+        model_name: str = "gpt-4o-mini",
+    ):
         self.api_key = api_key
         self.tracer = tracer
         self.model_name = model_name
+        self.base_url = base_url
 
     def generate_content(self, prompt: str, model_name: str | None = None) -> str:
         """
@@ -23,9 +30,12 @@ class LLMService:
         """
         model = model_name or self.model_name
 
-        with self.tracer.trace(name="LLMService.generate_content", input=prompt) as trace:
+        with self.tracer.trace(
+            name="LLMService.generate_content", input=prompt
+        ) as trace:
             try:
                 response = litellm.completion(
+                    base_url=self.base_url,
                     model=model,
                     messages=[{"role": "user", "content": prompt}],
                     api_key=self.api_key,

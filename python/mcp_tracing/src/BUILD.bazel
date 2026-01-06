@@ -6,14 +6,9 @@ py_binary(
     data = [":search_server"],
     visibility = ["//:__subpackages__"],
     deps = [
-        ":config",
-        "//python/mcp_tracing/src/utils",
-        "@pip//google_genai",
         "@pip//langfuse",
-        "@pip//litellm",
         "@pip//openai_agents",
         "@pip//openinference_instrumentation_google_genai",
-        "@pip//python_dotenv",
     ],
 )
 
@@ -22,12 +17,9 @@ py_binary(
     srcs = ["search_server.py"],
     visibility = ["//:__subpackages__"],
     deps = [
-        ":config",
-        "//python/mcp_tracing/src/utils",
         "@pip//exa_py",
         "@pip//fastmcp",
         "@pip//langfuse",
-        "@pip//python_dotenv",
     ],
 )
 
@@ -44,18 +36,18 @@ py_library(
 py_library(
     name = "src",
     srcs = [
+        "config.py",
         "main.py",
         "search_server.py",
     ],
     visibility = ["//:__subpackages__"],
     deps = [
-        ":config",
-        "//python/mcp_tracing/src/utils",
         "@pip//exa_py",
         "@pip//fastmcp",
         "@pip//langfuse",
         "@pip//openai_agents",
         "@pip//openinference_instrumentation_google_genai",
-        "@pip//python_dotenv",
+        "@pip//pydantic",
+        "@pip//pydantic_settings",
     ],
 )
