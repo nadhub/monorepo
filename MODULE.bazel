@@ -69,11 +69,12 @@ npm.npm_translate_lock(
     data = ["//typescript:pnpm-workspace.yaml"],
     npmrc = "//typescript:.npmrc",
     pnpm_lock = "//typescript:pnpm-lock.yaml",
-    # public_hoist_packages = {
-    #     "@next/eslint-plugin-next": ["next.js"],
-    #     "eslint-config-react-app": ["react"],
-    #     "eslint@8.28.0": ["react"],
-    # },
+    public_hoist_packages = {
+        # Angular requires tslib to be accessible globally for its build tools
+        "tslib": ["typescript", "typescript/pwc-fr-iafactory-demo-mkt-bounce"],
+        # Angular build tools need to access @angular/core internals
+        "@angular/core": ["typescript", "typescript/pwc-fr-iafactory-demo-mkt-bounce"],
+    },
     verify_node_modules_ignored = "//:.bazelignore",
 )
 use_repo(npm, "npm")
