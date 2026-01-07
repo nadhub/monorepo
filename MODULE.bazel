@@ -105,7 +105,13 @@ oci.pull(
     platforms = ["linux/amd64"],
     tag = "latest",
 )
-use_repo(oci, "debian_python_base", "debian_python_base_linux_amd64", "distroless_nodejs", "distroless_nodejs_linux_amd64")
+oci.pull(
+    name = "nginx_alpine",
+    image = "docker.io/library/nginx",
+    platforms = ["linux/amd64"],
+    tag = "alpine",
+)
+use_repo(oci, "debian_python_base", "debian_python_base_linux_amd64", "distroless_nodejs", "distroless_nodejs_linux_amd64", "nginx_alpine", "nginx_alpine_linux_amd64")
 
 ####################################################
 

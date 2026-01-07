@@ -20,4 +20,4 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: ROOT_PATH
-            value: /mkt-bounce-front-service
+            value: /demo-mkt-bounce-front-service

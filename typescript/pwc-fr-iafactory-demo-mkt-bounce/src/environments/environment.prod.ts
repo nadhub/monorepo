@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://{{{ env "FQDN" }}}/api',
+  apiUrl: 'https://{{{ env "FQDN" }}}',
   baseUrl: 'https://{{{ env "FQDN" }}}',
   basePath: '{{{ env "BASE_HREF" }}}',
   appName: 'PwC MKT Bounce Analyzer',
@@ -8,8 +8,8 @@ export const environment = {
   enableMockServices: false,
   logLevel: 'error',
   apiEndpoints: {
-    analyze: '/api/analyze-autoreply/v1/analyze',
-    health: '/api/health'
+    analyze: '/analyze-autoreply/v1/analyze',
+    health: '/healthcheck'
   },
   fileUpload: {
     maxSize: 10 * 1024 * 1024, // 10MB

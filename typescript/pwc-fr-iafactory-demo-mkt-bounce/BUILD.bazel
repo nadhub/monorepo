@@ -45,6 +45,7 @@ exports_files([
     "tsconfig.app.json",
     "tsconfig.spec.json",
     "tsconfig.bazel.json",
+    "nginx.conf",
 ])
 
 # All source files for the Angular application (excluding test files and template files)
@@ -108,8 +109,6 @@ js_run_binary(
     args = [
         "run",
         "email-bounce-frontend:build-bazel",
-        "--",
-        "--base-href=" + _BASE_HREF_VALUE,
     ],
     chdir = package_name(),
     out_dirs = ["dist/email-bounce-frontend"],
@@ -226,7 +225,30 @@ js_run_binary(
 # SSR production build target
 # Use: bazel build //typescript/pwc-fr-iafactory-demo-mkt-bounce:build_ssr
 js_run_binary(
-    name = "build_ssr",
+    name = "build_prod_spa",
+    srcs = [
+        ":srcs",
+        ":node_modules",
+        "//typescript:node_modules",
+    ],
+    args = [
+        "run",
+        "email-bounce-frontend:build-bazel",
+    ],
+    chdir = package_name(),
+    out_dirs = ["dist/email-bounce-frontend"],
+    tool = ":ng",
+    execution_requirements = {
+        "no-sandbox": "1",
+        "no-remote-exec": "1",
+    },
+    env = {
+        "NODE_PATH": "../node_modules",
+    },
+)
+
+js_run_binary(
+    name = "build_prod_ssr",
     srcs = [
         ":srcs",
         ":node_modules",
@@ -235,8 +257,6 @@ js_run_binary(
     args = [
         "run",
         "email-bounce-frontend:build-bazel-ssr",
-        "--",
-        "--base-href=" + _BASE_HREF_VALUE,
     ],
     chdir = package_name(),
     out_dirs = ["dist/email-bounce-frontend"],
@@ -254,17 +274,36 @@ js_run_binary(
 # The tar contains the Angular SSR server and browser bundles
 tar(
     name = "ssr_layer",
-    srcs = [":build_ssr"],
+    srcs = [":build_prod_ssr"],
     # Strip the bazel output prefix and place at /app in container
     mutate = mutate(
         strip_prefix = "typescript/pwc-fr-iafactory-demo-mkt-bounce",
     ),
 )
 
+# Nginx config layer - places nginx.conf at /etc/nginx/nginx.conf
+tar(
+    name = "nginx_conf_layer",
+    srcs = ["nginx.conf"],
+    mutate = mutate(
+        strip_prefix = "typescript/pwc-fr-iafactory-demo-mkt-bounce",
+        package_dir = "/etc/nginx",
+    ),
+)
+
+# SPA files layer - places browser files at /usr/share/nginx/html
+tar(
+    name = "spa_layer",
+    srcs = [":build_prod_spa"],
+    mutate = mutate(
+        strip_prefix = "typescript/pwc-fr-iafactory-demo-mkt-bounce/dist/email-bounce-frontend/browser",
+        package_dir = "/usr/share/nginx/html",
+    ),
+)
 # OCI image for Angular SSR server
 # Base: Distroless Node.js 22 image (minimal, secure)
 oci_image(
-    name = "image",
+    name = "image_ssr",
     base = "@distroless_nodejs_linux_amd64",
     tars = [":ssr_layer"],
     # Distroless nodejs images run node automatically on /nodejs/bin/node
@@ -279,23 +318,41 @@ oci_image(
     exposed_ports = ["4200/tcp"],
 )
 
+# OCI image for Angular SPA with nginx
+# Base: Distroless nginx image (minimal, secure)
+oci_image(
+    name = "image_spa",
+    base = "@nginx_alpine_linux_amd64",
+    tars = [
+        ":nginx_conf_layer",
+        ":spa_layer",
+    ],
+    exposed_ports = ["4200/tcp"],
+)
+
 # Load OCI image into local Docker daemon for testing
 # Use: bazel run //typescript/pwc-fr-iafactory-demo-mkt-bounce:image_load
 # Or build tarball: bazel build //typescript/pwc-fr-iafactory-demo-mkt-bounce:image_load --output_groups=tarball
 # Then: docker load < bazel-bin/typescript/pwc-fr-iafactory-demo-mkt-bounce/image_load/tarball.tar
 oci_load(
-    name = "image_load",
-    image = ":image",
-    repo_tags = ["pwc-demo-mkt-bounce:latest"],
+    name = "image_load_ssr",
+    image = ":image_ssr",
+    repo_tags = ["pwc-demo-mkt-bounce-ssr:latest"],
+)
+
+oci_load(
+    name = "image_load_spa",
+    image = ":image_spa",
+    repo_tags = ["pwc-demo-mkt-bounce-spa:latest"],
 )
 
 # Push OCI image to container registry
 # Use: bazel run //typescript/pwc-fr-iafactory-demo-mkt-bounce:push_image
 oci_push(
-    name = "push_image",
-    image = ":image",
+    name = "push_image_spa",
+    image = ":image_spa",
     # Default repository - override with --define or build settings
-    repository = "ifs-digitech-jfp-central-virtual-docker-dev001.artifacts-central.pwc.com/iafactory/pwc-demo-mkt-bounce",
+    repository = "ifs-digitech-jfp-central-virtual-docker-dev001.artifacts-central.pwc.com/iafactory/pwc-demo-mkt-bounce-spa",
     remote_tags = ["v1.0.0"],
 )
 

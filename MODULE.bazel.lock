@@ -1372,7 +1372,7 @@
     "@@rules_oci+//oci:extensions.bzl%oci": {
       "general": {
         "bzlTransitiveDigest": "QlIUsGfsZvanX1TeENU0UABAW1qtQhzvLc4Li7b0QT8=",
-        "usagesDigest": "dPsLGOkrYNfHOGufTelnzmXTV1O0RlBTj3P5FmuK2nQ=",
+        "usagesDigest": "CibuA+wO0iqD2tePqncNxp8afENVKVLxdnvHhhz4n0U=",
         "recordedFileInputs": {},
         "recordedDirentsInputs": {},
         "envVariables": {},
@@ -1432,6 +1432,35 @@
                 "@@platforms//cpu:x86_64": "@distroless_nodejs_linux_amd64"
               },
               "bzlmod_repository": "distroless_nodejs",
+              "reproducible": true
+            }
+          },
+          "nginx_alpine_linux_amd64": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_pull",
+            "attributes": {
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "alpine",
+              "platform": "linux/amd64",
+              "target_name": "nginx_alpine_linux_amd64",
+              "bazel_tags": []
+            }
+          },
+          "nginx_alpine": {
+            "repoRuleId": "@@rules_oci+//oci/private:pull.bzl%oci_alias",
+            "attributes": {
+              "target_name": "nginx_alpine",
+              "www_authenticate_challenges": {},
+              "scheme": "https",
+              "registry": "index.docker.io",
+              "repository": "library/nginx",
+              "identifier": "alpine",
+              "platforms": {
+                "@@platforms//cpu:x86_64": "@nginx_alpine_linux_amd64"
+              },
+              "bzlmod_repository": "nginx_alpine",
               "reproducible": true
             }
           },
@@ -1554,7 +1583,9 @@
             "debian_python_base",
             "debian_python_base_linux_amd64",
             "distroless_nodejs",
-            "distroless_nodejs_linux_amd64"
+            "distroless_nodejs_linux_amd64",
+            "nginx_alpine",
+            "nginx_alpine_linux_amd64"
           ],
           "explicitRootModuleDirectDevDeps": [],
           "useAllRepos": "NO",

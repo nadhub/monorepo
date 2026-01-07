@@ -41,8 +41,8 @@ export class ConfigService {
 
   get apiEndpoints(): any {
     return this.config.apiEndpoints || {
-      analyze: '/api/analyze-autoreply/v1/analyze',
-      health: '/api/health'
+      analyze: '/analyze-autoreply/v1/analyze',
+      health: '/healthcheck'
     };
   }
 

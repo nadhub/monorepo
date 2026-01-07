@@ -1,6 +1,6 @@
 replicaCount: 1
 
 image:
-  repository: ifs-digitech-jfp-central-virtual-docker-dev001.artifacts-central.pwc.com/iafactory/pwc-demo-mkt-bounce
-  pullPolicy: IfNotPresent
+  repository: ifs-digitech-jfp-central-virtual-docker-dev001.artifacts-central.pwc.com/iafactory/pwc-demo-mkt-bounce-spa
+  pullPolicy: Always
   tag: "v1.0.0"
