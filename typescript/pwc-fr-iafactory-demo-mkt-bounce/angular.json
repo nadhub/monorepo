@@ -193,6 +193,9 @@
             },
             "development": {
               "buildTarget": "email-bounce-frontend:build:development"
+            },
+            "bazel": {
+              "buildTarget": "email-bounce-frontend:build-bazel"
             }
           },
           "defaultConfiguration": "development"

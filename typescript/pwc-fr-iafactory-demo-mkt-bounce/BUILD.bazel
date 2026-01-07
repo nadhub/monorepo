@@ -5,18 +5,22 @@ load("@aspect_bazel_lib//lib:expand_template.bzl", "expand_template")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@tar.bzl", "mutate", "tar")
 load("@rules_oci//oci:defs.bzl", "oci_image", "oci_load", "oci_push")
+load("@rules_helm//helm:defs.bzl", "helm_chart", "helm_install", "helm_uninstall")
 
 package(default_visibility = ["//visibility:public"])
 
-# Environment variables for build-time substitution
-# These can be overridden with --define:
-#   bazel build //...:build --define=BACKEND_URL=https://example.com
+# Build configuration constants
+# Change these values to configure the build
+_BACKEND_URL_VALUE = "https://projecthub-qa.fr.pwcglb.com/demo-mkt-bounce-backend-service"
+_BASE_HREF_VALUE = "/mkt-bounce-front-service/"
+
+# Selectable versions for conditional builds
 BACKEND_URL = select({
-    "//conditions:default": "https://projecthub-qa.fr.pwcglb.com/demo-mkt-bounce-backend-service",
+    "//conditions:default": _BACKEND_URL_VALUE,
 })
 
 BASE_HREF = select({
-    "//conditions:default": "/mkt-bounce",
+    "//conditions:default": _BASE_HREF_VALUE,
 })
 
 # Generate environment.prod.ts from template with substituted values
@@ -24,8 +28,8 @@ expand_template(
     name = "environment_prod",
     out = "src/environments/environment.prod.ts",
     substitutions = {
-        "${BACKEND_URL}": "https://projecthub-qa.fr.pwcglb.com/demo-mkt-bounce-backend-service",
-        "${BASE_HREF}": "/mkt-bounce-front-service/",
+        "${BACKEND_URL}": _BACKEND_URL_VALUE,
+        "${BASE_HREF}": _BASE_HREF_VALUE,
     },
     template = "src/environments/environment.prod.ts.tpl",
 )
@@ -104,6 +108,8 @@ js_run_binary(
     args = [
         "run",
         "email-bounce-frontend:build-bazel",
+        "--",
+        "--base-href=" + _BASE_HREF_VALUE,
     ],
     chdir = package_name(),
     out_dirs = ["dist/email-bounce-frontend"],
@@ -129,6 +135,8 @@ js_run_binary(
     args = [
         "run",
         "email-bounce-frontend:build-bazel:development",
+        "--",
+        "--base-href=" + _BASE_HREF_VALUE,
     ],
     chdir = package_name(),
     out_dirs = ["dist/email-bounce-frontend"],
@@ -164,13 +172,16 @@ js_run_devserver(
     ],
 )
 
-# Production server simulation (SSR)
-# Use: bazel run //typescript/pwc-fr-iafactory-demo-mkt-bounce:serve_ssr
+# Production build preview (browser-only, no SSR)
+# Use: bazel run //typescript/pwc-fr-iafactory-demo-mkt-bounce:serve_prod
+# Note: For SSR testing, build and run manually:
+#   bazel build //typescript/pwc-fr-iafactory-demo-mkt-bounce:build_ssr
+#   node bazel-bin/typescript/pwc-fr-iafactory-demo-mkt-bounce/dist/email-bounce-frontend/server/server.mjs
 js_run_devserver(
-    name = "serve_ssr",
+    name = "serve_prod",
     args = [
         "serve",
-        "--configuration=production",
+        "--configuration=bazel",
         "--host=0.0.0.0",
         "--port=4200",
     ],
@@ -182,6 +193,7 @@ js_run_devserver(
         "package.json",
         "tsconfig.json",
         "tsconfig.app.json",
+        "tsconfig.bazel.json",
         ":node_modules",
         "//typescript:node_modules",
     ],
@@ -223,6 +235,8 @@ js_run_binary(
     args = [
         "run",
         "email-bounce-frontend:build-bazel-ssr",
+        "--",
+        "--base-href=" + _BASE_HREF_VALUE,
     ],
     chdir = package_name(),
     out_dirs = ["dist/email-bounce-frontend"],
@@ -260,7 +274,7 @@ oci_image(
     workdir = "/dist/email-bounce-frontend/server",
     env = {
         "NODE_ENV": "production",
-        "PORT": "4000",
+        "PORT": "4200",
     },
     exposed_ports = ["4200/tcp"],
 )
@@ -272,7 +286,7 @@ oci_image(
 oci_load(
     name = "image_load",
     image = ":image",
-    repo_tags = ["pwc-mkt-bounce:latest"],
+    repo_tags = ["pwc-demo-mkt-bounce:latest"],
 )
 
 # Push OCI image to container registry
@@ -281,5 +295,36 @@ oci_push(
     name = "push_image",
     image = ":image",
     # Default repository - override with --define or build settings
-    repository = "gcr.io/projecthub-qa/pwc-mkt-bounce",
+    repository = "ifs-digitech-jfp-central-virtual-docker-dev001.artifacts-central.pwc.com/iafactory/pwc-demo-mkt-bounce",
+    remote_tags = ["v1.0.0"],
 )
+
+# Helm chart 
+helm_chart(
+    name = "chart",
+    chart = "//kubernetes:helm/Chart.yaml",
+    templates = ["//kubernetes:helm_templates"],
+    values = "//kubernetes:helm/demo-mkt-front-values.yaml",
+)
+
+# Helm install release
+helm_install(
+    name = "demo-mkt-bounce-front-install",
+    install_name = "demo-mkt-bounce-front",
+    package = ":chart",
+    opts = [
+        "--wait",
+    ],
+)
+
+#Helm uninstall release
+helm_uninstall(
+    name = "demo-mkt-bounce-front-uninstall",
+    helm_opts = [
+        "uninstall",  # Required verb
+        "demo-mkt-bounce-front",
+        "--wait",
+        "--ignore-not-found",
+    ],
+)
+

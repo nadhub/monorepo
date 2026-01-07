@@ -2,7 +2,7 @@ load("@rules_helm//helm:defs.bzl", "helm_chart", "helm_install", "helm_uninstall
 
 exports_files([
     "helm/Chart.yaml",
-    "helm/values.yaml",
+    "helm/demo-mkt-front-values.yaml",
 ])
 
 filegroup(
@@ -38,5 +38,5 @@ helm_chart(
     name = "chart",
     chart = "helm/Chart.yaml",
     templates = glob(["helm/templates/*"]),
-    values = "helm/values.yaml",
+    values = "helm/demo-mkt-front-values.yaml",
 )
